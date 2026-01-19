@@ -3,20 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NYC Trip Master - Full Sites</title>
+    <title>NYC Trip Master</title>
     <style>
         :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; --success: #27ae60; --special: #9b59b6; }
         body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); margin: 0; padding: 10px; padding-bottom: 80px; color: #333; }
         .header { text-align: center; background: white; padding: 15px; border-radius: 15px; margin-bottom: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .section { background: #fff; border-radius: 12px; padding: 12px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .day-card { background: white; border-radius: 12px; padding: 12px; margin-bottom: 12px; border-right: 5px solid var(--accent); box-shadow: 0 3px 6px rgba(0,0,0,0.05); }
-        .day-header { font-weight: bold; color: var(--primary); margin-bottom: 8px; font-size: 1.05em; background: #f8f9fa; padding: 6px; border-radius: 6px; border-bottom: 2px solid #eee; }
+        .day-header { font-weight: bold; color: var(--primary); margin-bottom: 8px; font-size: 1.05em; background: #f8f9fa; padding: 6px; border-radius: 6px; }
         .category { margin: 8px 0; font-size: 0.9em; line-height: 1.5; border-bottom: 1px solid #f2f2f2; padding-bottom: 5px; }
         .label { font-weight: bold; color: #7f8c8d; font-size: 0.78em; display: block; margin-bottom: 2px; }
-        .content a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(52, 152, 219, 0.2); margin-left: 4px; display: inline-block; }
-        .special-btn { background: var(--special); color: white; border: none; padding: 10px; border-radius: 8px; width: 100%; text-align: right; display: flex; justify-content: space-between; font-weight: bold; }
+        .content a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(52, 152, 219, 0.2); margin-left: 5px; display: inline-block; }
         .footer-tools { position: fixed; bottom: 15px; right: 15px; left: 15px; display: flex; justify-content: space-between; z-index: 1000; }
-        .map-btn { background: var(--success); color: white; padding: 12px 18px; border-radius: 25px; border: none; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.2); text-decoration: none; font-size: 13px; }
+        .map-btn { background: var(--success); color: white; padding: 12px 18px; border-radius: 25px; border: none; font-weight: bold; text-decoration: none; font-size: 13px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
     </style>
 </head>
 <body>
@@ -26,48 +25,24 @@
 </div>
 
 <div class="section">
-    <button class="special-btn" onclick="toggle('g-docs')">📄 מסמכים וקבצים <span>+</span></button>
-    <div id="g-docs" style="display:none; padding:10px;">
+    <div id="doc-upload-area">
         <input type="file" id="up" style="display:none" onchange="upload(this)">
-        <button onclick="document.getElementById('up').click()" style="width:100%; padding:8px; border:1px dashed var(--accent); background:none; color:var(--accent); border-radius:8px;">+ העלאת קובץ/תמונה</button>
+        <button onclick="document.getElementById('up').click()" style="width:100%; padding:10px; border:1px dashed var(--accent); background:none; color:var(--accent); border-radius:8px; font-weight:bold;">📄 העלאת רשימת חנויות/מסמך</button>
         <div id="doc-list" style="margin-top:8px;"></div>
-        <img id="prev" style="width:100%; border-radius:10px; margin-top:10px; display:none;" onclick="this.style.display='none'">
     </div>
 </div>
 
 <div id="app"></div>
 
 <div class="footer-tools">
-    <a href="https://www.google.com/maps/search/?api=1&query=current+location" class="map-btn" target="_blank">📍 מה יש סביבי?</a>
+    <a href="https://www.google.com/maps/search/?api=1&query=attractions+near+me" class="map-btn" target="_blank">📍 מה יש סביבי?</a>
 </div>
 
 <script>
-    function toggle(id) {
-        const el = document.getElementById(id);
-        el.style.display = el.style.display === 'block' ? 'none' : 'block';
-    }
+    function map(q) { return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q + " New York")}`; }
+    function mapDC(q) { return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q + " Washington DC")}`; }
 
-    function map(q) { 
-        return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q + " New York")}`; 
-    }
-    
-    function mapDC(q) { 
-        return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q + " Washington DC")}`; 
-    }
-
-    const allDays = [
+    const daysData = [
         { d: 1, date: "27-Sep", area: "Flatiron + Midtown", 
-          sights: `<a href="${map('Madison Square Park')}">Madison Sq Park</a>, <a href="${map('Flatiron Building')}">Flatiron</a>, <a href="${map('Gramercy Park')}">Gramercy חיצוני</a>, <a href="${map('Times Square')}">Times Square</a>, <a href="${map('Grand Central Terminal')}">Grand Central</a>`, 
-          shop: `<a href="${map('Marshalls 620 6th Ave')}">Marshalls (6th Ave)</a>, <a href="${map('TJ Maxx 18 W 33rd St')}">TJ Maxx (33rd)</a>`, 
-          food: "Eataly, Rosetta Bakery, Shake Shack",
-          streets: `<a href="${map('Broadway')}">Broadway</a>, <a href="${map('5th Ave')}">5th Ave</a>, <a href="${map('Irving Place')}">Irving Place</a>`
-        },
-        { d: 2, date: "28-Sep", area: "Woodbury Outlets", sights: `<a href="${map('Woodbury Common Premium Outlets')}">Woodbury Outlets - יום קניות מלא</a>`, shop: "כל המותגים", food: "Food Court", streets: "-" },
-        { d: 3, date: "29-Sep", area: "Chelsea + Hudson Yards", 
-          sights: `<a href="${map('Chelsea Market')}">Chelsea Market</a>, <a href="${map('Starbucks Reserve Roastery')}">Starbucks</a>, <a href="${map('High Line 14th St')}">High Line (14th St)</a>, <a href="${map('Hudson Yards')}">Hudson Yards</a>, <a href="${map('Vessel')}">Vessel חיצוני</a>, <a href="${map('Edge Hudson Yards')}">EDGE</a>`, 
-          shop: `<a href="${map('Marshalls 400 W 33rd St')}">Marshalls (33rd)</a>`, 
-          food: "Magnolia Bakery, Black Seed Bagels", 
-          streets: `<a href="${map('9th Ave')}">9th Ave</a>, <a href="${map('10th Ave')}">10th Ave</a>, <a href="${map('14th St')}">14th St</a>`
-        },
-        { d: 4, date: "30-Sep", area: "SoHo + Nolita + LES", 
-          sights: `<a href="${map('Nordstrom Rack Broadway')}">Nordstrom Rack</a>, <a href="${map('Little Italy')}">Little Italy</a>, <a href="${map('Ch
+          sights: `<a href="${map('Madison Square Park')}">Madison Sq Park</a>, <a href="${map('Flatiron Building')}">Flatiron</a>, <a href="${map('Gramercy Park')}">Gramercy חיצוני</a>, <a href="${map('Times Square')}">Times Square</a>, <a href="${map('Grand Central Terminal')}">Grand Central</a>`,
+          shop: "Marshalls (6th Ave),
