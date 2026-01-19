@@ -3,119 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NYC Trip 2026</title>
+    <title>NYC Trip Master Pro</title>
     <style>
-        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; --success: #27ae60; }
-        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); margin: 0; padding: 10px; padding-bottom: 80px; color: #333; }
-        .header { text-align: center; background: white; padding: 15px; border-radius: 15px; margin-bottom: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .day-card { background: white; border-radius: 12px; padding: 12px; margin-bottom: 15px; border-right: 6px solid var(--accent); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .day-header { font-weight: bold; color: var(--primary); margin-bottom: 10px; font-size: 1.1em; border-bottom: 1px solid #f0f0f0; padding-bottom: 5px; }
-        .category { margin: 8px 0; font-size: 0.9em; line-height: 1.5; }
-        .label { font-weight: bold; color: #7f8c8d; font-size: 0.8em; display: block; margin-bottom: 2px; }
-        .content a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(52,152,219,0.3); margin-left: 5px; }
-        .upload-section { background: #fff; padding: 15px; border-radius: 12px; margin-bottom: 15px; text-align: center; }
-        .footer-tools { position: fixed; bottom: 15px; right: 15px; left: 15px; display: flex; justify-content: center; z-index: 1000; }
-        .map-btn { background: var(--success); color: white; padding: 12px 25px; border-radius: 30px; border: none; font-weight: bold; text-decoration: none; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; --success: #27ae60; --dark: #34495e; }
+        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); margin: 0; padding-bottom: 80px; direction: rtl; }
+        
+        /* Tabs */
+        .tabs { position: fixed; bottom: 0; width: 100%; background: white; display: flex; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 1000; }
+        .tab-btn { flex: 1; padding: 15px; border: none; background: none; font-weight: bold; color: #95a5a6; font-size: 14px; }
+        .tab-btn.active { color: var(--accent); border-top: 3px solid var(--accent); }
+
+        .container { padding: 15px; display: none; }
+        .container.active { display: block; }
+
+        .header { text-align: center; background: white; padding: 15px; border-radius: 0 0 20px 20px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .day-card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; position: relative; border-right: 5px solid var(--accent); }
+        .edit-btn { position: absolute; left: 10px; top: 10px; background: #eee; border: none; border-radius: 5px; padding: 5px 10px; font-size: 12px; }
+        
+        .label { font-weight: bold; color: #7f8c8d; font-size: 0.8em; display: block; margin-top: 10px; }
+        .content { font-size: 0.95em; line-height: 1.4; }
+        .content a { color: var(--accent); text-decoration: none; }
+
+        textarea { width: 100%; border: 1px solid #ddd; border-radius: 8px; padding: 10px; font-family: inherit; margin-top: 5px; box-sizing: border-box; }
+        .save-btn { background: var(--success); color: white; border: none; padding: 10px 20px; border-radius: 8px; margin-top: 10px; width: 100%; font-weight: bold; }
+
+        .note-item { background: white; padding: 10px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .add-note-btn { background: var(--primary); color: white; border: none; width: 100%; padding: 15px; border-radius: 10px; font-weight: bold; margin-bottom: 20px; }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <h2 style="margin:0;">NYC MASTER PLAN 🗽</h2>
-    <p style="margin:5px 0 0; font-size:0.8em; color:gray;">גרסה מעודכנת - כל האתרים והרחובות</p>
+<div id="itinerary" class="container active">
+    <div class="header"><h2>המסלול שלי 🗽</h2></div>
+    <div id="days-list"></div>
 </div>
 
-<div class="upload-section">
-    <input type="file" id="up" style="display:none" onchange="upload(this)">
-    <button onclick="document.getElementById('up').click()" style="width:100%; padding:10px; border:1px dashed var(--accent); background:none; color:var(--accent); border-radius:8px; font-weight:bold;">📄 העלאת רשימת חנויות/אאוטלט</button>
-    <div id="doc-list" style="margin-top:10px;"></div>
+<div id="notes" class="container">
+    <div class="header"><h2>רשימות וקניות 📝</h2></div>
+    <button class="add-note-btn" onclick="addNote()">+ הוספת רשימה חדשה</button>
+    <div id="notes-list"></div>
 </div>
 
-<div id="app"></div>
-
-<div class="footer-tools">
-    <a href="https://www.google.com/maps/search/?api=1&query=$" class="map-btn" target="_blank">📍 מה יש סביבי עכשיו?</a>
+<div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('itinerary', this)">🗺️ מסלול</button>
+    <button class="tab-btn" onclick="switchTab('notes', this)">📝 רשימות</button>
 </div>
 
 <script>
-    function map(q) { return `https://www.google.com/maps/search/restaurants+and+shops+near+me{encodeURIComponent(q + " New York")}`; }
-    function mapDC(q) { return `https://www.google.com/maps/search/restaurants+near+me{encodeURIComponent(q + " Washington DC")}`; }
-
-    const days = [
-        { d: 1, date: "27-Sep", area: "Flatiron + Midtown", 
-          sights: `<a href="${map('Madison Square Park')}">Madison Sq Park</a>, <a href="${map('Flatiron Building')}">Flatiron</a>, <a href="${map('Gramercy Park')}">Gramercy (חיצוני)</a>, <a href="${map('Times Square')}">Times Square</a>, <a href="${map('Grand Central Terminal')}">Grand Central</a>`,
-          shop: "Marshalls (6th Ave), TJ Maxx (33rd)", 
-          streets: "Broadway, Park Ave South, Irving Place, 5th Ave",
-          food: "Eataly, Shake Shack, Rosetta Bakery" },
-        { d: 2, date: "28-Sep", area: "Woodbury Outlets", 
-          sights: `<a href="${map('Woodbury Common Premium Outlets')}">Woodbury Outlets - יום קניות מלא</a>`,
-          shop: "השתמשי בכפתור העלאת הקבצים למעלה לרשימת החנויות", streets: "-", food: "Food Court" },
-        { d: 3, date: "29-Sep", area: "Chelsea + Hudson Yards", 
-          sights: `<a href="${map('Chelsea Market')}">Chelsea Market</a>, <a href="${map('Starbucks Reserve Roastery')}">Starbucks Roastery</a>, <a href="${map('High Line 14th St')}">High Line</a>, <a href="${map('Hudson Yards')}">Hudson Yards</a>, <a href="${map('Vessel')}">Vessel (חיצוני)</a>, <a href="${map('Edge Hudson Yards')}">EDGE</a>, <a href="${map('Little Island')}">Little Island (Pier 55)</a>`,
-          shop: "Marshalls (33rd), Hudson Yards Mall", streets: "9th Ave, 10th Ave, 14th St", food: "Magnolia Bakery" },
-        { d: 4, date: "30-Sep", area: "SoHo + Nolita + LES", 
-          sights: `<a href="${map('Little Italy')}">Little Italy</a>, <a href="${map('Chinatown')}">Chinatown</a>, <a href="${map('Elizabeth Street Garden')}">Elizabeth St Garden</a>, <a href="${map('Nordstrom Rack Broadway')}">Nordstrom Rack</a>`,
-          shop: "SoHo Shopping, Prince St", streets: "Prince St, Spring St, Mulberry St, Orchard St", food: "Katz's Deli, La Cabra" },
-        { d: 5, date: "01-Oct", area: "Brooklyn: DUMBO", 
-          sights: `<a href="${map('770 Eastern Pkwy')}">770</a>, <a href="${map('Washington St Dumbo')}">Washington St (צילום)</a>, <a href="${map('Brooklyn Bridge Park')}">Brooklyn Bridge Park</a>, <a href="${map('Time Out Market')}">Time Out Market</a>`,
-          shop: "Dumbo Boutiques", streets: "Washington St, Water St, Bedford Ave", food: "Black Seed Bagels" },
-        { d: 6, date: "02-Oct", area: "Central Park + Uptown", 
-          sights: `<a href="${map('Central Park Bethesda Terrace')}">Bethesda Terrace</a>, <a href="${map('Bow Bridge')}">Bow Bridge</a>, <a href="${map('Strawberry Fields')}">Strawberry Fields</a>, <a href="${map('Lincoln Center')}">Lincoln Center</a>, <a href="${map('Roosevelt Island Tramway')}">רכבל רוזוולט</a>, <a href="${map('Four Freedoms Park')}">Four Freedoms Park</a>`,
-          shop: "Marshalls & TJ Maxx Uptown", streets: "Columbus Ave, Amsterdam Ave, Madison Ave", food: "Broadway Bagels" },
-        { d: 7, date: "03-Oct", area: "Williamsburg", 
-          sights: `<a href="${map('Brooklyn Bridge')}">Brooklyn Bridge</a>, <a href="${map('Williamsburg')}">Williamsburg</a>, <a href="${map('Smorgasburg Williamsburg')}">Smorgasburg (שבת)</a>, <a href="${map('Domino Park')}">Domino Park</a>`,
-          shop: "Bedford Ave Shops", streets: "Bedford Ave, Kent Ave", food: "Tompkins Sq Bagels" },
-        { d: 8, date: "04-Oct", area: "Washington DC", 
-          sights: `<a href="${mapDC('National Mall')}">National Mall</a>, <a href="${mapDC('Lincoln Memorial')}">Lincoln Memorial</a>, <a href="${mapDC('White House')}">הבית הלבן</a>, <a href="${mapDC('Air and Space Museum')}">מוזיאון החלל</a>, <a href="${mapDC('Capitol Washington')}">Capitol</a>, <a href="${mapDC('Union Station Washington')}">Union Station</a>`,
-          shop: "-", streets: "Georgetown M St", food: "Georgetown" },
-        { d: 9, date: "05-Oct", area: "Jersey Gardens", 
-          sights: `<a href="${map('The Mills at Jersey Gardens')}">Jersey Gardens Outlet</a>`,
-          shop: "יום קניות", streets: "-", food: "Food Court" },
-        { d: 10, date: "06-Oct", area: "Downtown", 
-          sights: `<a href="${map('Wall Street')}">Wall Street</a>, <a href="${map('One World Trade Center')}">One World Trade</a>, <a href="${map('9/11 Memorial')}">9/11 Memorial</a>, <a href="${map('Battery Park')}">Battery Park</a>, <a href="${map('Statue of Liberty Ferry')}">פסל החירות</a>`,
-          shop: "Century 21", streets: "Wall St, Stone St, Broadway", food: "Manhatta" },
-        { d: 11, date: "07-Oct", area: "Union Sq + Village", 
-          sights: `<a href="${map('Union Square')}">Union Sq</a>, <a href="${map('Washington Square Park')}">Washington Sq Park</a>, <a href="${map('Friends Building')}">Friends Building</a>, <a href="${map('Stonewall Inn')}">Stonewall</a>`,
-          shop: "Village Boutique", streets: "Bleecker St, MacDougal St, Grove St", food: "Bagel Pub, Mama Too Pizza" },
-        { d: 12, date: "08-Oct", area: "Midtown - Flight", 
-          sights: `<a href="${map('Bryant Park')}">Bryant Park</a>, <a href="${map('Times Square')}">Times Square Area</a>`,
-          shop: "Macy's Herald Square", streets: "5th Ave, Broadway", food: "Ess-a-Bagel" }
+    // Data Management
+    let tripData = JSON.parse(localStorage.getItem('nyc_trip_data')) || [
+        { d: 1, date: "27-Sep", area: "Flatiron + Midtown", sights: "Madison Sq Park, Flatiron, Times Square", shop: "Marshalls, TJ Maxx", food: "Eataly", streets: "Broadway, 5th Ave" },
+        { d: 2, date: "28-Sep", area: "Woodbury Outlets", sights: "Woodbury Outlets", shop: "יום קניות מלא", food: "Food Court", streets: "-" },
+        { d: 3, date: "29-Sep", area: "Chelsea + Hudson Yards", sights: "Chelsea Market, High Line, Edge", shop: "Hudson Yards Mall", food: "Magnolia Bakery", streets: "9th Ave, 10th Ave" },
+        { d: 4, date: "30-Sep", area: "SoHo + Nolita + LES", sights: "Little Italy, Chinatown, Elizabeth St Garden", shop: "SoHo Shopping", food: "Katz's Deli", streets: "Prince St, Spring St" },
+        { d: 5, date: "01-Oct", area: "Brooklyn: DUMBO", sights: "770, Washington St, Brooklyn Bridge Park", shop: "Dumbo Shops", food: "Black Seed Bagels", streets: "Water St" },
+        { d: 6, date: "02-Oct", area: "Central Park + Uptown", sights: "Bethesda Terrace, Roosevelt Island Tram", shop: "Marshalls Uptown", food: "Broadway Bagels", streets: "Columbus Ave" },
+        { d: 7, date: "03-Oct", area: "Williamsburg", sights: "Brooklyn Bridge, Smorgasburg", shop: "Williamsburg Shops", food: "Tompkins Sq Bagels", streets: "Bedford Ave" },
+        { d: 8, date: "04-Oct", area: "Washington DC", sights: "National Mall, White House, Capitol", shop: "-", food: "Georgetown", streets: "M Street" },
+        { d: 9, date: "05-Oct", area: "Jersey Gardens", sights: "Jersey Gardens Outlet", shop: "יום קניות", food: "Food Court", streets: "-" },
+        { d: 10, date: "06-Oct", area: "Downtown", sights: "Wall Street, 9/11 Memorial, Statue of Liberty", shop: "Century 21", food: "Manhatta", streets: "Stone St" },
+        { d: 11, date: "07-Oct", area: "Union Sq + Village", sights: "Union Sq, Washington Sq Park, Friends Bldg", shop: "Village Shops", food: "Mama Too Pizza", streets: "Bleecker St" },
+        { d: 12, date: "08-Oct", area: "Midtown - Flight", sights: "Bryant Park", shop: "Macy's", food: "Ess-a-Bagel", streets: "5th Ave" }
     ];
 
-    function render() {
-        document.getElementById('app').innerHTML = days.map(day => `
-            <div class="day-card">
-                <div class="day-header">יום ${day.d} | ${day.date} - ${day.area}</div>
-                <div class="category"><span class="label">📍 אתרים מרכזיים (לחצי לניווט):</span> <span class="content">${day.sights}</span></div>
-                <div class="category"><span class="label">🚶 רחובות מומלצים:</span> <span class="content">${day.streets}</span></div>
-                <div class="category"><span class="label">🛍️ קניות:</span> <span class="content">${day.shop}</span></div>
-                <div class="category"><span class="label">☕ אוכל:</span> <span class="content">${day.food}</span></div>
-            </div>
-        `).join('');
-    }
+    let myNotes = JSON.parse(localStorage.getItem('nyc_notes')) || [];
 
-    let docs = JSON.parse(localStorage.getItem('nyc_docs_v12')) || [];
-    function upload(input) {
-        const file = input.files[0];
-        const reader = new FileReader();
-        reader.onload = function(e) { 
-            docs.push({ name: file.name, data: e.target.result }); 
-            localStorage.setItem('nyc_docs_v12', JSON.stringify(docs)); 
-            renderDocs(); 
-        };
-        reader.readAsDataURL(file);
-    }
-    function renderDocs() {
-        document.getElementById('doc-list').innerHTML = docs.map((d, i) => `
-            <div style="background:#f0f2f5; padding:8px; margin-top:5px; border-radius:8px; display:flex; justify-content:space-between; font-size:13px;">
-                <a href="${d.data}" target="_blank" style="color:var(--accent); text-decoration:none;">📷 ${d.name}</a>
-                <span onclick="docs.splice(${i},1); localStorage.setItem('nyc_docs_v12', JSON.stringify(docs)); renderDocs()" style="color:red; cursor:pointer;">✖</span>
-            </div>
-        `).join('');
-    }
-
-    render();
-    renderDocs();
-</script>
-</body>
-</html>
+    function switchTab(tabId, btn) {
+        document.querySelectorAll('.container').forEach(c => c.classList.
