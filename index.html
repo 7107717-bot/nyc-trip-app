@@ -2,85 +2,82 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NYC Trip 2026 - Master Table</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NYC 2026 App</title>
     <style>
-        body { font-family: -apple-system, sans-serif; background: #eaeff2; margin: 0; padding: 10px; direction: rtl; }
-        .app-header { background: #2c3e50; color: white; text-align: center; padding: 20px; border-radius: 15px; margin-bottom: 15px; }
+        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f8f9fa; --text: #333; }
+        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); margin: 0; direction: rtl; color: var(--text); }
+        .app-bar { background: var(--primary); color: white; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .container { padding: 12px; }
         
-        /* עיצוב כרטיס יום כטבלה */
-        .day-container { background: white; border-radius: 12px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: 1px solid #d1d8dd; }
-        .day-header { background: #3498db; color: white; padding: 12px; font-weight: bold; font-size: 1.1em; display: flex; justify-content: space-between; }
+        .day-card { background: white; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); overflow: hidden; border: 1px solid #eee; }
+        .day-header { background: var(--accent); color: white; padding: 12px 15px; font-weight: bold; font-size: 1.1em; display: flex; justify-content: space-between; }
         
-        .grid-row { display: flex; border-bottom: 1px solid #edf2f7; align-items: stretch; }
-        .grid-row:last-child { border-bottom: none; }
+        .info-table { width: 100%; border-collapse: collapse; }
+        .row { border-bottom: 1px solid #f0f0f0; display: flex; align-items: stretch; }
+        .row:last-child { border-bottom: none; }
         
-        .col-label { width: 85px; background: #f8fafc; color: #64748b; font-weight: bold; font-size: 0.85em; padding: 10px; border-left: 1px solid #edf2f7; display: flex; align-items: center; }
-        .col-content { flex: 1; padding: 10px; font-size: 0.95em; color: #1e293b; line-height: 1.4; }
+        .label { width: 90px; background: #fdfdfd; padding: 10px; font-size: 0.8em; font-weight: bold; color: #7f8c8d; border-left: 1px solid #f0f0f0; display: flex; align-items: center; }
+        .data { flex: 1; padding: 10px; font-size: 0.95em; line-height: 1.4; }
         
-        .map-btn { color: #2563eb; text-decoration: none; font-weight: 600; border-bottom: 1px solid #bfdbfe; }
-        .pier-badge { background: #dcfce7; color: #166534; padding: 2px 6px; border-radius: 4px; font-size: 0.8em; font-weight: bold; margin-left: 4px; }
+        .map-link { color: #007aff; text-decoration: none; font-weight: 600; }
+        .pier-tag { color: #e67e22; font-weight: bold; border-bottom: 1px solid #fdf2e9; }
+        .food-item { color: #27ae60; font-weight: bold; }
+        .shop-item { color: #8e44ad; }
     </style>
 </head>
 <body>
 
-<div class="app-header">
-    <h2 style="margin:0;">לו"ז ניו יורק 2026 🗽</h2>
+<div class="app-bar">
+    <h2 style="margin:0; font-size: 1.2em;">NYC Trip Master 🗽</h2>
 </div>
 
-<div class="day-container">
-    <div class="day-header"><span>יום 1 | 27.09</span><span>ראשון</span></div>
-    <div class="grid-row">
-        <div class="col-label">📍 אתרים</div>
-        <div class="col-content">
-            <a href="https://www.google.com/maps/search/Madison+Square+Park+NY" class="map-btn">Madison Sq Park</a>, 
-            <a href="https://www.google.com/maps/search/Flatiron+Building+NY" class="map-btn">Flatiron</a>, 
-            Gramercy (חיצוני), 
-            <a href="https://www.google.com/maps/search/Times+Square+NY" class="map-btn">Times Square</a>, 
-            <a href="https://www.google.com/maps/search/Grand+Central+Terminal+NY" class="map-btn">Grand Central</a>
-        </div>
+<div class="container" id="app-content">
     </div>
-    <div class="grid-row">
-        <div class="col-label">🛍️ קניות</div>
-        <div class="col-content">Marshalls (6th Ave), TJ Maxx (33rd)</div>
-    </div>
-    <div class="grid-row">
-        <div class="col-label">☕ אוכל</div>
-        <div class="col-content"><b>Eataly</b>, Rosetta Bakery, Shake Shack</div>
-    </div>
-</div>
 
-<div class="day-container">
-    <div class="day-header"><span>יום 3 | 29.09</span><span>שלישי</span></div>
-    <div class="grid-row">
-        <div class="col-label">📍 אתרים</div>
-        <div class="col-content">
-            <a href="https://www.google.com/maps/search/Chelsea+Market+NY" class="map-btn">Chelsea Market</a>, High Line, 
-            <a href="https://www.google.com/maps/search/Vessel+Hudson+Yards" class="map-btn">Vessel</a>, 
-            <a href="https://www.google.com/maps/search/Edge+Observation+Deck" class="map-btn">EDGE</a>, 
-            <span class="pier-badge">Pier 55</span> <a href="https://www.google.com/maps/search/Little+Island+NY" class="map-btn">Little Island</a>,
-            <span class="pier-badge">Pier 57</span> <a href="https://www.google.com/maps/search/Market+57+Hudson+River+Park" class="map-btn">Market 57</a>
-        </div>
-    </div>
-    <div class="grid-row">
-        <div class="col-label">☕ אוכל</div>
-        <div class="col-content"><b>Starbucks Roastery</b>, Magnolia Bakery</div>
-    </div>
-    <div class="grid-row">
-        <div class="col-label">🛍️ קניות</div>
-        <div class="col-content">קניון Hudson Yards</div>
-    </div>
-</div>
+<script>
+    const tripData = [
+        { d: "1", date: "27-Sep", dayName: "ראשון", area: "Flatiron + Midtown", sights: "Madison Sq Park, Flatiron, Gramercy חיצוני, Times Square, Grand Central", shop: "Marshalls (620 6th Ave), TJ Maxx (18 W 33rd), Le Labo Madison", food: "Eataly, Rosetta Bakery, Shake Shack, Hard Rock Café", roofs: "230 Fifth, Refinery, The Skylark, PHD Terrace", piers: "Pier 54, Pier 62", streets: "Broadway, Park Ave South, 5th Ave" },
+        { d: "2", date: "28-Sep", dayName: "שני", area: "Woodbury Outlets", sights: "Woodbury Outlets", shop: "יום קניות מלא - אאוטלט", food: "Food Court", roofs: "בקרבת המלון", piers: "-", streets: "-" },
+        { d: "3", date: "29-Sep", dayName: "שלישי", area: "Chelsea + Hudson Yards", sights: "Chelsea Market, High Line, Vessel, EDGE, Little Island", shop: "Marshalls (400 W 33rd), Le Labo Hudson Yards", food: "Black Seed Bagels, Magnolia Bakery, Starbucks Roastery", roofs: "Gallow Green, Press Lounge", piers: "Pier 57, Pier 55", streets: "9th Ave, 10th Ave, 14th St" },
+        { d: "4", date: "30-Sep", dayName: "רביעי", area: "SoHo + Nolita + LES", sights: "Little Italy, Chinatown, Elizabeth Street Garden", shop: "Nordstrom Rack (486 Broadway), Marshalls (478 Broadway), TJ Maxx SoHo", food: "Katz’s Deli, Russ & Daughters, La Cabra", roofs: "PHD Terrace SoHo", piers: "Pier 17, Pier 15, Pier 35", streets: "Prince St, Spring St, Mulberry St" },
+        { d: "5", date: "1-Oct", dayName: "חמישי", area: "Brooklyn: DUMBO", sights: "770 Eastern Pkwy, Washington St, Brooklyn Bridge Park", shop: "Dumbo Boutiques", food: "Black Seed Bagels, Time Out Market", roofs: "Westlight (Williamsburg)", piers: "Pier 1 DUMBO, Pier 6", streets: "Washington St, Water St" },
+        { d: "6", date: "2-Oct", dayName: "שישי", area: "Central Park + Uptown", sights: "The Mall, Bethesda, Bow Bridge, Lincoln Center, Roosevelt Island Tram", shop: "Marshalls (1991 Broadway), TJ Maxx (250 W 57th)", food: "Broadway Bagels", roofs: "The Roof at Viceroy", piers: "רכבל רוזוולט", streets: "Columbus Ave, Madison Ave" },
+        { d: "7", date: "3-Oct", dayName: "שבת", area: "Williamsburg", sights: "Brooklyn Bridge, DUMBO, Williamsburg, Domino Park", shop: "Williamsburg Shops", food: "Smorgasburg (שבת בלבד), Tompkins Sq Bagels", roofs: "Westlight, Wythe Hotel", piers: "East River Ferry", streets: "Bedford Ave, Kent Ave" },
+        { d: "8", date: "4-Oct", dayName: "ראשון", area: "Washington DC", sights: "National Mall, White House, Capitol, Air & Space Museum", shop: "-", food: "Georgetown Cupcakes", roofs: "-", piers: "-", streets: "M Street Georgetown" },
+        { d: "9", date: "5-Oct", dayName: "שני", area: "Jersey Gardens", sights: "Jersey Gardens Outlet", shop: "יום קניות מלא", food: "Food Court", roofs: "בקרבת המלון", piers: "-", streets: "-" },
+        { d: "10", date: "6-Oct", dayName: "שלישי", area: "Downtown + Liberty", sights: "Wall Street, 9/11 Memorial, Battery Park, פסל החירות", shop: "Century 21, Le Labo Downtown", food: "Manhatta, Stone Street", roofs: "PHD Terrace, The Skylark", piers: "Pier 15, Pier 17", streets: "Wall St, Stone St" },
+        { d: "11", date: "7-Oct", dayName: "רביעי", area: "Union Sq + Village", sights: "Union Sq, Washington Sq Park, Friends Building", shop: "Marshalls (620 6th Ave), Le Labo Village", food: "Mama Too Pizza, Bagel Pub, Fellini Café", roofs: "Refinery Rooftop", piers: "Pier 46, Pier 51", streets: "Bleecker St, MacDougal St" },
+        { d: "12", date: "8-Oct", dayName: "חמישי", area: "Midtown - טיסה", sights: "Bryant Park, Times Square", shop: "Macy’s (151 W 34th St)", food: "Ess-a-Bagel, Magnolia", roofs: "230 Fifth", piers: "Pier 54, Pier 62", streets: "5th Ave, 6th Ave" }
+    ];
 
-<div class="day-container">
-    <div class="day-header"><span>יום 5 | 01.10</span><span>חמישי</span></div>
-    <div class="grid-row">
-        <div class="col-label">📍 אתרים</div>
-        <div class="col-content">
-            <a href="https://www.google.com/maps/search/770+Eastern+Parkway+Brooklyn" class="map-btn">770 (חב"ד)</a>, 
-            <a href="https://www.google.com/maps/search/Washington+St+Brooklyn" class="map-btn">Washington St</a>, 
-            Dumbo Park, 
-            <span class="pier-badge">Pier 17</span> <a href="https://www.google.com/maps/search/Time+Out+Market+NY" class="map-btn">Time Out Market</a>
-        </div>
-    </div>
-    <div class="grid-row">
+    function createMapLink(item) {
+        if (item === "-" || item === "לא רלוונטי") return item;
+        return item.split(',').map(s => {
+            const clean = s.trim();
+            return `<a href="https://www.google.com/maps/search/${encodeURIComponent(clean + ' New York')}" class="map-link" target="_blank">${clean}</a>`;
+        }).join(', ');
+    }
+
+    const container = document.getElementById('app-content');
+    tripData.forEach(day => {
+        const card = document.createElement('div');
+        card.className = 'day-card';
+        card.innerHTML = `
+            <div class="day-header">
+                <span>יום ${day.d} | ${day.date} (${day.dayName})</span>
+                <span style="font-size: 0.8em; opacity: 0.9;">${day.area}</span>
+            </div>
+            <div class="row"><div class="label">📍 אתרים</div><div class="data">${createMapLink(day.sights)}</div></div>
+            <div class="row"><div class="label">🛍️ קניות</div><div class="data shop-item">${day.shop}</div></div>
+            <div class="row"><div class="label">☕ אוכל</div><div class="data food-item">${day.food}</div></div>
+            <div class="row"><div class="label">🍹 רופטופ</div><div class="data">${day.roofs}</div></div>
+            <div class="row"><div class="label">⚓ מזחים</div><div class="data pier-tag">${day.piers}</div></div>
+            <div class="row"><div class="label">🚶 רחובות</div><div class="data">${day.streets}</div></div>
+        `;
+        container.appendChild(card);
+    });
+</script>
+
+</body>
+</html>
