@@ -3,37 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NYC Trip Pro</title>
+    <title>NYC Trip 2026</title>
     <style>
         :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; --success: #27ae60; }
         body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); margin: 0; padding-bottom: 70px; direction: rtl; }
-        
         .tabs { position: fixed; bottom: 0; width: 100%; background: white; display: flex; border-top: 1px solid #ddd; z-index: 1000; }
         .tab-btn { flex: 1; padding: 15px; border: none; background: none; font-weight: bold; color: #95a5a6; }
         .tab-btn.active { color: var(--accent); border-top: 3px solid var(--accent); }
-
         .container { padding: 15px; display: none; }
         .container.active { display: block; }
-
         .header { text-align: center; background: white; padding: 15px; border-radius: 0 0 20px 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 15px; }
-        .day-card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; position: relative; border-right: 5px solid var(--accent); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        
-        .edit-btn { position: absolute; left: 10px; top: 10px; background: #f0f0f0; border: none; border-radius: 5px; padding: 5px 8px; font-size: 11px; cursor: pointer; }
+        .day-card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; border-right: 5px solid var(--accent); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .label { font-weight: bold; color: #7f8c8d; font-size: 0.8em; display: block; margin-top: 8px; }
         .content { font-size: 0.95em; line-height: 1.4; margin-top: 2px; }
-        
-        textarea { width: 100%; border: 1px solid #ddd; border-radius: 8px; padding: 10px; margin-top: 5px; font-family: inherit; box-sizing: border-box; }
-        .save-btn { background: var(--success); color: white; border: none; padding: 10px; border-radius: 8px; width: 100%; margin-top: 10px; font-weight: bold; }
-        
-        .note-item { background: white; padding: 12px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .note-item { background: white; padding: 12px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; }
         .add-btn { background: var(--primary); color: white; border: none; width: 100%; padding: 12px; border-radius: 10px; font-weight: bold; margin-bottom: 15px; }
+        .reset-btn { background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 5px; font-size: 10px; margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <div id="itinerary" class="container active">
     <div class="header"><h3>המסלול שלי 🗽</h3></div>
-    <div id="days-list"></div>
+    <div id="days-list">טוען נתונים...</div>
+    <center><button class="reset-btn" onclick="resetAll()">לניקוי זיכרון ותיקון תצוגה ⚙️</button></center>
 </div>
 
 <div id="notes" class="container">
@@ -59,4 +52,19 @@
         { d: 8, date: "04-Oct", area: "Washington DC", sights: "National Mall, Lincoln Memorial, White House, Capitol", shop: "-", food: "Georgetown", streets: "M Street" },
         { d: 9, date: "05-Oct", area: "Jersey Gardens", sights: "Jersey Gardens Outlet", shop: "יום קניות", food: "Food Court", streets: "-" },
         { d: 10, date: "06-Oct", area: "Downtown", sights: "Wall Street, 9/11 Memorial, Statue of Liberty", shop: "Century 21", food: "Manhatta", streets: "Stone St" },
-        { d: 11, date: "07-Oct", area: "Union Sq + Village", sights: "Union Sq, Washington Sq Park, Friends Bldg", shop: "Village Shops", food: "Mama Too Pizza", streets:
+        { d: 11, date: "07-Oct", area: "Union Sq + Village", sights: "Union Sq, Washington Sq Park, Friends Bldg", shop: "Village Shops", food: "Mama Too Pizza", streets: "Bleecker St" },
+        { d: 12, date: "08-Oct", area: "Midtown - Flight", sights: "Bryant Park, Times Square", shop: "Macy's", food: "Ess-a-Bagel", streets: "5th Ave" }
+    ];
+
+    function switchTab(tabId, btn) {
+        document.querySelectorAll('.container').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        btn.classList.add('active');
+    }
+
+    function renderDays() {
+        const data = JSON.parse(localStorage.getItem('nyc_trip_final')) || defaultData;
+        const list = document.getElementById('days-list');
+        list.innerHTML = data.map((day, i) => `
+            <div class="
