@@ -3,136 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NYC Master Trip</title>
+    <title>NYC Trip Master</title>
     <style>
         :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; --success: #27ae60; --special: #9b59b6; }
         body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); margin: 0; padding: 15px; padding-bottom: 100px; color: #333; }
         .header { text-align: center; background: white; padding: 15px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .section { background: #fff; border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .section-title { font-weight: bold; margin-bottom: 10px; color: var(--primary); border-bottom: 1px solid #eee; padding-bottom: 5px; }
-        
-        /* מדריכים מיוחדים */
         .special-box { background: #fdfaff; border: 1px solid #e1d5e7; border-radius: 12px; padding: 8px; margin-bottom: 8px; }
         .special-btn { background: var(--special); color: white; border: none; padding: 10px; border-radius: 8px; width: 100%; text-align: right; display: flex; justify-content: space-between; font-weight: bold; }
-        .special-content { display: none; padding: 10px; font-size: 0.9em; background: white; border-radius: 0 0 8px 8px; line-height: 1.4; }
-
-        .todo-item { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-        .todo-item.done { text-decoration: line-through; color: #bdc3c7; }
-        
+        .special-content { display: none; padding: 10px; font-size: 0.9em; background: white; border-radius: 0 0 8px 8px; line-height: 1.5; }
         .day-card { background: white; border-radius: 15px; padding: 15px; margin-bottom: 15px; border-right: 6px solid var(--accent); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .day-header { font-weight: bold; color: var(--primary); margin-bottom: 8px; font-size: 1.1em; border-bottom: 1px solid #f0f0f0; padding-bottom: 5px; }
-        .category { margin: 6px 0; font-size: 0.9em; }
-        .label { font-weight: bold; color: #7f8c8d; font-size: 0.8em; display: block; }
-        .content a { color: var(--accent); text-decoration: none; font-weight: 500; }
-
+        .category { margin: 8px 0; font-size: 0.95em; }
+        .label { font-weight: bold; color: #7f8c8d; font-size: 0.85em; display: block; }
+        .content a { color: var(--accent); text-decoration: none; font-weight: 500; border-bottom: 1px dashed var(--accent); }
         .footer-tools { position: fixed; bottom: 20px; right: 20px; left: 20px; display: flex; justify-content: space-between; z-index: 1000; }
         .map-btn { background: var(--success); color: white; padding: 12px 20px; border-radius: 30px; border: none; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.3); text-decoration: none; font-size: 14px; }
+        .doc-item { display: flex; justify-content: space-between; align-items: center; background: #f9f9f9; padding: 8px; margin-bottom: 5px; border-radius: 8px; }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <h1 style="margin:0; font-size: 1.4em;">NYC MASTER APP 🗽</h1>
+    <h1 style="margin:0; font-size: 1.4em;">NYC TRIP MASTER 🗽</h1>
 </div>
 
 <div class="section">
-    <div class="section-title">✨ מדריכי אתרים מפורטים</div>
+    <div class="section-title">✨ מדריכים מפורטים</div>
     
-    <div class="special-box">
-        <button class="special-btn" onclick="toggle('g-outlets')">🛍️ אאוטלט - חנויות מועדפות <span>+</span></button>
-        <div id="g-outlets" class="special-content">
-            <b>Woodbury Common:</b><br>
-            סימנת חנויות מועדפות בקובץ. מומלץ להעלות את צילום הרשימה ל"מסמכים" למטה.<br>
-            חנויות מרכזיות: Nike, Polo RL, Coach, Gucci, Lululemon.
-        </div>
-    </div>
-
     <div class="special-box">
         <button class="special-btn" onclick="toggle('g-dc')">🏛️ וושינגטון - מסלול מלא <span>+</span></button>
         <div id="g-dc" class="special-content">
-            <b>מסלול מומלץ:</b><br>
-            1. הגעה ל-Union Station<br>
-            2. הקפיטול (Capitol)<br>
-            3. המוזיאון הלאומי (National Mall)<br>
-            4. הבית הלבן<br>
-            5. ג'ורג'טאון (Georgetown) לסיום.
-        </div>
-    </div>
-
-    <div class="special-box">
-        <button class="special-btn" onclick="toggle('g-tram')">🚠 רכבל רוזוולט <span>+</span></button>
-        <div id="g-tram" class="special-content">
-            <b>מיקום:</b> רחוב 59 ואינדיאנה (East Side).<br>
-            <b>טיפ:</b> להשתמש ב-MetroCard או OMNY. הנוף הכי יפה הוא בצד ימין כשיוצאים ממנהטן.
-        </div>
-    </div>
-</div>
-
-<div class="section">
-    <div class="section-title">📄 מסמכים חשובים</div>
-    <input type="file" id="up" style="display:none" onchange="upload(this)">
-    <button onclick="document.getElementById('up').click()" style="width:100%; padding:8px; border:1px dashed var(--accent); background:none; color:var(--accent); border-radius:8px;">+ העלאת צילום מסמך/רשימה</button>
-    <div id="doc-list" style="margin-top:10px;"></div>
-    <img id="prev" style="width:100%; border-radius:10px; margin-top:10px; display:none;" onclick="this.style.display='none'">
-</div>
-
-<div id="app"></div>
-
-<div class="footer-tools">
-    <a href="https://www.google.com/maps/search/restaurants+near+me" class="map-btn" target="_blank">📍 מה יש סביבי?</a>
-</div>
-
-<script>
-    function toggle(id) {
-        const el = document.getElementById(id);
-        el.style.display = el.style.display === 'block' ? 'none' : 'block';
-    }
-
-    function map(q) { return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q + " New York")}`; }
-
-    // כל 12 הימים
-    const allDays = [
-        { d: 1, date: "27-Sep", area: "Midtown", sights: `<a href="${map('Times Square')}">Times Square</a>, Grand Central`, shop: `<a href="${map('Marshalls 6th Ave')}">Marshalls</a>, <a href="${map('TJ Maxx 33rd')}">TJ Maxx</a>`, food: "Eataly" },
-        { d: 2, date: "28-Sep", area: "Woodbury Outlets", sights: "יום קניות מלא", shop: "Woodbury Commons", food: "Food Court" },
-        { d: 3, date: "29-Sep", area: "Chelsea", sights: "High Line, Edge, Chelsea Market", shop: "Hudson Yards", food: "Magnolia" },
-        { d: 4, date: "30-Sep", area: "SoHo", sights: "Little Italy, Chinatown", shop: "SoHo Shopping", food: "Katz's Deli" },
-        { d: 5, date: "01-Oct", area: "Brooklyn", sights: "770, Brooklyn Bridge", shop: "Dumbo", food: "Time Out Market" },
-        { d: 6, date: "02-Oct", area: "Central Park", sights: "Park, Roosevelt Island Tram", shop: "Midtown", food: "Bagels" },
-        { d: 7, date: "03-Oct", area: "Williamsburg", sights: "Domino Park", shop: "Williamsburg", food: "Smorgasburg" },
-        { d: 8, date: "04-Oct", area: "Washington DC", sights: "National Mall, White House", shop: "-", food: "DC" },
-        { d: 9, date: "05-Oct", area: "Jersey Gardens", sights: "Outlet", shop: "Jersey Gardens", food: "Food Court" },
-        { d: 10, date: "06-Oct", area: "Downtown", sights: "9/11 Memorial, Wall St", shop: "Century 21", food: "Manhatta" },
-        { d: 11, date: "07-Oct", area: "The Village", sights: "Washington Sq, Friends Bldg", shop: "Village Shops", food: "Bagel Pub" },
-        { d: 12, date: "08-Oct", area: "Flight", sights: "Bryant Park", shop: "Macy's", food: "Ess-a-Bagel" }
-    ];
-
-    let docs = JSON.parse(localStorage.getItem('nyc_docs_v6')) || [];
-
-    function upload(input) {
-        const file = input.files[0];
-        const reader = new FileReader();
-        reader.onload = function(e) { docs.push({ name: file.name, data: e.target.result }); localStorage.setItem('nyc_docs_v6', JSON.stringify(docs)); render(); };
-        reader.readAsDataURL(file);
-    }
-
-    function render() {
-        document.getElementById('doc-list').innerHTML = docs.map((d, i) => `
-            <div style="display:flex; justify-content:space-between; background:#f9f9f9; padding:8px; margin-bottom:5px; border-radius:8px;">
-                <span onclick="document.getElementById('prev').src='${d.data}'; document.getElementById('prev').style.display='block'" style="color:var(--accent)">📷 ${d.name}</span>
-                <span onclick="docs.splice(${i},1); localStorage.setItem('nyc_docs_v6', JSON.stringify(docs)); render()" style="color:red">✖</span>
-            </div>
-        `).join('');
-
-        document.getElementById('app').innerHTML = allDays.map(day => `
-            <div class="day-card">
-                <div class="day-header">יום ${day.d} | ${day.date} - ${day.area}</div>
-                <div class="category"><span class="label">📍 אתרים:</span> ${day.sights}</div>
-                <div class="category"><span class="label">🛍️ קניות:</span> ${day.shop}</div>
-                <div class="category"><span class="label">☕ אוכל:</span> ${day.food}</div>
-            </div>
-        `).join('');
-    }
-    render();
-</script>
-</body>
-</html>
+            <b>הלו"ז המתוכנן:</b><br>
+            • 10:30 הגעה ל-<a href="https://www.google.com/maps/search/Union+Station+DC">Union Station</a><br>
+            • 10:45 <a href="https://www.google.com/maps/search/US+Capitol">הקפיטול</a><br>
+            • 11:30 <a href="https://www.google.com/maps/search/National+Mall">National Mall</a><br>
+            • 12:30 <a href="https://www.google.com/maps/search/Air+and+Space+Museum">מוזיאון החלל</a><br>
+            • 14:30 <a href="https://www.google.com/maps/search/White+House">הבית הלבן</a><br>
+            • 15:30 <a href="
