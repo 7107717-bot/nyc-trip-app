@@ -3,97 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NYC Trip App</title>
+    <title>NYC Trip Master</title>
     <style>
-        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; }
-        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); margin: 0; padding: 15px; padding-bottom: 80px; }
-        .header { text-align: center; background: white; padding: 20px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .day-card { background: white; border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-right: 6px solid var(--accent); }
-        .day-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 8px; margin-bottom: 10px; }
-        .day-title { font-weight: bold; font-size: 1.1em; color: var(--primary); }
-        .area-tag { font-size: 0.8em; background: #e1f5fe; color: #0288d1; padding: 3px 8px; border-radius: 10px; }
-        .category { margin: 8px 0; }
-        .label { font-weight: bold; color: #7f8c8d; font-size: 0.9em; display: block; }
-        .content { font-size: 1em; color: #34495e; outline: none; min-height: 1.2em; display: block; }
-        .content:focus { background: #fffde7; }
-        .add-btn { position: fixed; bottom: 20px; left: 20px; background: #27ae60; color: white; width: 60px; height: 60px; border-radius: 30px; border: none; font-size: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 1000; }
+        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; --success: #27ae60; --danger: #e74c3c; }
+        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); margin: 0; padding: 15px; padding-bottom: 100px; color: #333; }
+        .header { text-align: center; background: white; padding: 15px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        
+        .section { background: #fff; border-radius: 15px; padding: 15px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .section-title { font-weight: bold; margin-bottom: 12px; color: var(--primary); display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        
+        .todo-item { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        .todo-item.done { text-decoration: line-through; color: #bdc3c7; }
+        
+        .doc-item { display: flex; justify-content: space-between; align-items: center; background: #f9f9f9; padding: 8px; border-radius: 8px; margin-bottom: 5px; font-size: 0.9em; }
+        .doc-preview { max-width: 100%; border-radius: 10px; margin-top: 10px; display: none; border: 2px solid #ddd; }
+
+        .day-card { background: white; border-radius: 15px; padding: 15px; margin-bottom: 15px; border-right: 6px solid var(--accent); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .day-header { font-weight: bold; color: var(--primary); margin-bottom: 10px; font-size: 1.1em; }
+        .category { margin: 8px 0; font-size: 0.95em; }
+        .label { font-weight: bold; color: #7f8c8d; font-size: 0.85em; display: block; }
+        .content a { color: var(--accent); text-decoration: none; font-weight: 500; }
+
+        .footer-tools { position: fixed; bottom: 20px; right: 20px; left: 20px; display: flex; justify-content: space-between; z-index: 1000; }
+        .map-btn { background: var(--success); color: white; padding: 12px 20px; border-radius: 30px; border: none; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.3); text-decoration: none; }
+        .add-btn { background: var(--primary); color: white; width: 50px; height: 50px; border-radius: 25px; border: none; font-size: 24px; }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <h1 style="margin:0;">NYC TRIP 🍎</h1>
-    <p style="margin:5px 0 0; color:#7f8c8d; font-size:0.9em;">לחצי על טקסט לעריכה • נשמר אוטומטית</p>
+    <h1 style="margin:0; font-size: 1.5em;">NYC MASTER APP 🍎</h1>
+</div>
+
+<div class="section">
+    <div class="section-title">✅ משימות לפני הנסיעה</div>
+    <div id="todo-list"></div>
+    <div style="display:flex; gap:5px; margin-top:10px;">
+        <input type="text" id="todo-input" style="flex:1; border-radius:8px; border:1px solid #ddd; padding:8px;" placeholder="משימה חדשה...">
+        <button onclick="addTodo()" style="background:var(--accent); color:white; border:none; border-radius:8px; padding:0 15px;">+</button>
+    </div>
+</div>
+
+<div class="section">
+    <div class="section-title">📄 מסמכים חשובים (דרכון, כרטיסים)</div>
+    <input type="file" id="doc-upload" style="display:none" onchange="uploadDoc(this)">
+    <button onclick="document.getElementById('doc-upload').click()" style="width:100%; padding:10px; border-radius:8px; border:1px dashed var(--accent); color:var(--accent); background:none; font-weight:bold;">+ הוספת צילום מסמך</button>
+    <div id="doc-list" style="margin-top:10px;"></div>
+    <img id="main-preview" class="doc-preview">
 </div>
 
 <div id="app"></div>
-<button class="add-btn" onclick="addNewDay()">+</button>
+
+<div class="footer-tools">
+    <button class="add-btn" onclick="addNewDay()">+</button>
+    <a href="https://www.google.com/maps/search/restaurants+near+me" class="map-btn" target="_blank">📍 מה יש סביבי?</a>
+</div>
 
 <script>
-    // כל המידע שלך מהטבלה
-    const initialData = [
-        { day: 1, date: "27-Sep", area: "Flatiron + Midtown", sights: "Madison Sq Park, Flatiron, Times Sq, Grand Central", shopping: "Marshalls, TJ Maxx, Le Labo", food: "Rosetta Bakery, Eataly", rooftop: "230 Fifth, Skylark" },
-        { day: 2, date: "28-Sep", area: "מחוץ לעיר", sights: "Woodbury Outlets", shopping: "יום קניות מלא", food: "-", rooftop: "-" },
-        { day: 3, date: "29-Sep", area: "Chelsea + Hudson Yards", sights: "Chelsea Market, High Line, EDGE, Vessel", shopping: "Marshalls, Le Labo", food: "Black Seed Bagels, Magnolia", rooftop: "Gallow Green" },
-        { day: 4, date: "30-Sep", area: "SoHo + Nolita + LES", sights: "Little Italy, Chinatown, Elizabeth Street Garden", shopping: "Nordstrom Rack, Marshalls, TJ Maxx", food: "Katz’s, Russ & Daughters", rooftop: "PHD SoHo" },
-        { day: 5, date: "01-Oct", area: "Brooklyn: DUMBO", sights: "770 Eastern Pkwy, Brooklyn Bridge Park, Washington St", shopping: "בוטיקים בדאמבו", food: "Black Seed DUMBO", rooftop: "Westlight" },
-        { day: 6, date: "02-Oct", area: "Central Park + Uptown", sights: "סנטרל פארק, Roosevelt Island, רכבל", shopping: "Marshalls, TJ Maxx", food: "Broadway Bagels", rooftop: "Refinery" },
-        { day: 7, date: "03-Oct", area: "Brooklyn: Williamsburg", sights: "Brooklyn Bridge, Domino Park, Williamsburg", shopping: "ויליאמסבורג", food: "Smorgasburg", rooftop: "Westlight" },
-        { day: 8, date: "04-Oct", area: "Washington DC", sights: "אופציה - וושינגטון", shopping: "-", food: "בתי קפה קלים", rooftop: "-" },
-        { day: 9, date: "05-Oct", area: "Jersey Gardens", sights: "Jersey Gardens Outlet", shopping: "יום קניות", food: "-", rooftop: "-" },
-        { day: 10, date: "06-Oct", area: "Downtown", sights: "Wall St, One World, 9/11, פסל החירות", shopping: "Marshalls, Le Labo", food: "Manhatta", rooftop: "Overstory" },
-        { day: 11, date: "07-Oct", area: "Greenwich Village", sights: "Union Sq, Washington Sq, Friends Building", shopping: "Marshalls", food: "Bagel Pub, Fellini Cafe", rooftop: "230 Fifth" },
-        { day: 12, date: "08-Oct", area: "Midtown - טיסה", sights: "Bryant Park", shopping: "Macy’s", food: "Ess-a-Bagel", rooftop: "-" }
-    ];
+    function map(q) { return `https://www.google.com/maps/search/${encodeURIComponent(q + " New York")}`; }
 
-    let tripData = JSON.parse(localStorage.getItem('nyc_trip_v1')) || initialData;
+    // נתונים ראשוניים
+    const initialDays = [
+        { day: 1, date: "27-Sep", area: "Midtown", sights: `<a href="${map('Times Square')}">Times Sq</a>`, shopping: `<a href="${map('Marshalls 6th Ave')}">Marshalls</a>`, piers: "Pier 54", food: "Eataly" }
+    ];
+    
+    let days = JSON.parse(localStorage.getItem('nyc_days')) || initialDays;
+    let todos = JSON.parse(localStorage.getItem('nyc_todos')) || [{text:"דרכון בתוקף", done:false}, {text:"ביטוח נסיעות", done:false}];
+    let docs = JSON.parse(localStorage.getItem('nyc_docs')) || [];
+
+    function save() {
+        localStorage.setItem('nyc_days', JSON.stringify(days));
+        localStorage.setItem('nyc_todos', JSON.stringify(todos));
+        localStorage.setItem('nyc_docs', JSON.stringify(docs));
+        render();
+    }
+
+    function addTodo() {
+        const input = document.getElementById('todo-input');
+        if(input.value) { todos.push({text: input.value, done: false}); input.value=''; save(); }
+    }
+
+    function uploadDoc(input) {
+        const file = input.files[0];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            docs.push({ name: file.name, data: e.target.result });
+            save();
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function showDoc(data) {
+        const img = document.getElementById('main-preview');
+        img.src = data;
+        img.style.display = 'block';
+        img.onclick = () => img.style.display = 'none';
+    }
 
     function render() {
-        const app = document.getElementById('app');
-        app.innerHTML = '';
-        tripData.forEach((day, index) => {
-            const card = document.createElement('div');
-            card.className = 'day-card';
-            card.innerHTML = `
-                <div class="day-header">
-                    <span class="day-title">יום ${day.day} | ${day.date}</span>
-                    <span class="area-tag" contenteditable="true" onblur="update(${index}, 'area', this.innerText)">${day.area}</span>
-                </div>
-                <div class="category">
-                    <span class="label">📍 אתרים:</span>
-                    <span class="content" contenteditable="true" onblur="update(${index}, 'sights', this.innerText)">${day.sights}</span>
-                </div>
-                <div class="category">
-                    <span class="label">🛍️ קניות:</span>
-                    <span class="content" contenteditable="true" onblur="update(${index}, 'shopping', this.innerText)">${day.shopping}</span>
-                </div>
-                <div class="category">
-                    <span class="label">☕ אוכל:</span>
-                    <span class="content" contenteditable="true" onblur="update(${index}, 'food', this.innerText)">${day.food}</span>
-                </div>
-                <div class="category">
-                    <span class="label">🍸 רופטופ:</span>
-                    <span class="content" contenteditable="true" onblur="update(${index}, 'rooftop', this.innerText)">${day.rooftop}</span>
-                </div>
-            `;
-            app.appendChild(card);
-        });
-    }
+        // רנדור משימות
+        document.getElementById('todo-list').innerHTML = todos.map((t, i) => `
+            <div class="todo-item ${t.done?'done':''}">
+                <input type="checkbox" ${t.done?'checked':''} onclick="todos[${i}].done=!todos[${i}].done; save()">
+                <span>${t.text}</span>
+            </div>
+        `).join('');
 
-    function update(index, field, value) {
-        tripData[index][field] = value;
-        localStorage.setItem('nyc_trip_v1', JSON.stringify(tripData));
-    }
+        // רנדור מסמכים
+        document.getElementById('doc-list').innerHTML = docs.map((d, i) => `
+            <div class="doc-item">
+                <span onclick="showDoc('${d.data}')" style="color:var(--accent); cursor:pointer">📷 ${d.name}</span>
+                <span onclick="docs.splice(${i},1); save()" style="color:var(--danger); cursor:pointer">✖</span>
+            </div>
+        `).join('');
 
-    function addNewDay() {
-        const nextDay = tripData.length + 1;
-        tripData.push({ day: nextDay, date: "תאריך", area: "אזור", sights: "...", shopping: "-", food: "-", rooftop: "-" });
-        render();
-        localStorage.setItem('nyc_trip_v1', JSON.stringify(tripData));
+        // רנדור ימים
+        document.getElementById('app').innerHTML = days.map((d, i) => `
+            <div class="day-card">
+                <div class="day-header">יום ${d.day} | ${d.date} - ${d.area}</div>
+                <div class="category"><span class="label">📍 אתרים:</span> ${d.sights}</div>
+                <div class="category"><span class="label">🛍️ קניות:</span> ${d.shopping}</div>
+                <div class="category"><span class="label">⚓ מזחים:</span> ${d.piers}</div>
+                <div class="category"><span class="label">☕ אוכל:</span> ${d.food}</div>
+            </div>
+        `).join('');
     }
 
     render();
 </script>
-
 </body>
 </html>
