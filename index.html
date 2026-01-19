@@ -3,81 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NYC 2026 App</title>
+    <title>NYC Smart App 2026</title>
     <style>
-        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f8f9fa; --text: #333; }
-        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); margin: 0; direction: rtl; color: var(--text); }
-        .app-bar { background: var(--primary); color: white; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f9; --text: #2d3436; --save: #27ae60; }
+        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); margin: 0; direction: rtl; color: var(--text); padding-bottom: 40px; }
+        
+        .app-bar { background: var(--primary); color: white; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+        .nearby-btn { background: var(--save); color: white; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; margin-top: 10px; font-size: 0.9em; box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: pointer; }
+        
         .container { padding: 12px; }
+        .day-card { background: white; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow: hidden; border: 1px solid #e1e8ed; }
+        .day-header { background: var(--accent); color: white; padding: 12px 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
         
-        .day-card { background: white; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); overflow: hidden; border: 1px solid #eee; }
-        .day-header { background: var(--accent); color: white; padding: 12px 15px; font-weight: bold; font-size: 1.1em; display: flex; justify-content: space-between; }
-        
-        .info-table { width: 100%; border-collapse: collapse; }
         .row { border-bottom: 1px solid #f0f0f0; display: flex; align-items: stretch; }
         .row:last-child { border-bottom: none; }
         
-        .label { width: 90px; background: #fdfdfd; padding: 10px; font-size: 0.8em; font-weight: bold; color: #7f8c8d; border-left: 1px solid #f0f0f0; display: flex; align-items: center; }
-        .data { flex: 1; padding: 10px; font-size: 0.95em; line-height: 1.4; }
+        .label { width: 85px; background: #f9fbff; padding: 12px 8px; font-size: 0.75em; font-weight: bold; color: #7f8c8d; border-left: 1px solid #f0f0f0; display: flex; align-items: center; }
+        .data { flex: 1; padding: 12px; font-size: 0.95em; line-height: 1.5; outline: none; transition: background 0.2s; }
+        .data:focus { background: #fffde7; border-radius: 4px; }
         
         .map-link { color: #007aff; text-decoration: none; font-weight: 600; }
-        .pier-tag { color: #e67e22; font-weight: bold; border-bottom: 1px solid #fdf2e9; }
-        .food-item { color: #27ae60; font-weight: bold; }
-        .shop-item { color: #8e44ad; }
+        .edit-hint { font-size: 0.7em; color: #bdc3c7; text-align: center; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
 <div class="app-bar">
-    <h2 style="margin:0; font-size: 1.2em;">NYC Trip Master 🗽</h2>
+    <h2 style="margin:0; font-size: 1.2em;">ניו יורק 2026 - חכם 🗽</h2>
+    <button class="nearby-btn" onclick="findNearby()">📍 מה בסביבה שלי?</button>
 </div>
 
-<div class="container" id="app-content">
-    </div>
+<div class="container">
+    <div class="edit-hint">💡 ניתן לערוך כל שדה בנגיעה - השינוי נשמר אוטומטית</div>
+    <div id="app-content"></div>
+</div>
 
 <script>
-    const tripData = [
-        { d: "1", date: "27-Sep", dayName: "ראשון", area: "Flatiron + Midtown", sights: "Madison Sq Park, Flatiron, Gramercy חיצוני, Times Square, Grand Central", shop: "Marshalls (620 6th Ave), TJ Maxx (18 W 33rd), Le Labo Madison", food: "Eataly, Rosetta Bakery, Shake Shack, Hard Rock Café", roofs: "230 Fifth, Refinery, The Skylark, PHD Terrace", piers: "Pier 54, Pier 62", streets: "Broadway, Park Ave South, 5th Ave" },
-        { d: "2", date: "28-Sep", dayName: "שני", area: "Woodbury Outlets", sights: "Woodbury Outlets", shop: "יום קניות מלא - אאוטלט", food: "Food Court", roofs: "בקרבת המלון", piers: "-", streets: "-" },
-        { d: "3", date: "29-Sep", dayName: "שלישי", area: "Chelsea + Hudson Yards", sights: "Chelsea Market, High Line, Vessel, EDGE, Little Island", shop: "Marshalls (400 W 33rd), Le Labo Hudson Yards", food: "Black Seed Bagels, Magnolia Bakery, Starbucks Roastery", roofs: "Gallow Green, Press Lounge", piers: "Pier 57, Pier 55", streets: "9th Ave, 10th Ave, 14th St" },
-        { d: "4", date: "30-Sep", dayName: "רביעי", area: "SoHo + Nolita + LES", sights: "Little Italy, Chinatown, Elizabeth Street Garden", shop: "Nordstrom Rack (486 Broadway), Marshalls (478 Broadway), TJ Maxx SoHo", food: "Katz’s Deli, Russ & Daughters, La Cabra", roofs: "PHD Terrace SoHo", piers: "Pier 17, Pier 15, Pier 35", streets: "Prince St, Spring St, Mulberry St" },
-        { d: "5", date: "1-Oct", dayName: "חמישי", area: "Brooklyn: DUMBO", sights: "770 Eastern Pkwy, Washington St, Brooklyn Bridge Park", shop: "Dumbo Boutiques", food: "Black Seed Bagels, Time Out Market", roofs: "Westlight (Williamsburg)", piers: "Pier 1 DUMBO, Pier 6", streets: "Washington St, Water St" },
-        { d: "6", date: "2-Oct", dayName: "שישי", area: "Central Park + Uptown", sights: "The Mall, Bethesda, Bow Bridge, Lincoln Center, Roosevelt Island Tram", shop: "Marshalls (1991 Broadway), TJ Maxx (250 W 57th)", food: "Broadway Bagels", roofs: "The Roof at Viceroy", piers: "רכבל רוזוולט", streets: "Columbus Ave, Madison Ave" },
-        { d: "7", date: "3-Oct", dayName: "שבת", area: "Williamsburg", sights: "Brooklyn Bridge, DUMBO, Williamsburg, Domino Park", shop: "Williamsburg Shops", food: "Smorgasburg (שבת בלבד), Tompkins Sq Bagels", roofs: "Westlight, Wythe Hotel", piers: "East River Ferry", streets: "Bedford Ave, Kent Ave" },
-        { d: "8", date: "4-Oct", dayName: "ראשון", area: "Washington DC", sights: "National Mall, White House, Capitol, Air & Space Museum", shop: "-", food: "Georgetown Cupcakes", roofs: "-", piers: "-", streets: "M Street Georgetown" },
-        { d: "9", date: "5-Oct", dayName: "שני", area: "Jersey Gardens", sights: "Jersey Gardens Outlet", shop: "יום קניות מלא", food: "Food Court", roofs: "בקרבת המלון", piers: "-", streets: "-" },
-        { d: "10", date: "6-Oct", dayName: "שלישי", area: "Downtown + Liberty", sights: "Wall Street, 9/11 Memorial, Battery Park, פסל החירות", shop: "Century 21, Le Labo Downtown", food: "Manhatta, Stone Street", roofs: "PHD Terrace, The Skylark", piers: "Pier 15, Pier 17", streets: "Wall St, Stone St" },
-        { d: "11", date: "7-Oct", dayName: "רביעי", area: "Union Sq + Village", sights: "Union Sq, Washington Sq Park, Friends Building", shop: "Marshalls (620 6th Ave), Le Labo Village", food: "Mama Too Pizza, Bagel Pub, Fellini Café", roofs: "Refinery Rooftop", piers: "Pier 46, Pier 51", streets: "Bleecker St, MacDougal St" },
-        { d: "12", date: "8-Oct", dayName: "חמישי", area: "Midtown - טיסה", sights: "Bryant Park, Times Square", shop: "Macy’s (151 W 34th St)", food: "Ess-a-Bagel, Magnolia", roofs: "230 Fifth", piers: "Pier 54, Pier 62", streets: "5th Ave, 6th Ave" }
-    ];
-
-    function createMapLink(item) {
-        if (item === "-" || item === "לא רלוונטי") return item;
-        return item.split(',').map(s => {
-            const clean = s.trim();
-            return `<a href="https://www.google.com/maps/search/${encodeURIComponent(clean + ' New York')}" class="map-link" target="_blank">${clean}</a>`;
-        }).join(', ');
-    }
-
-    const container = document.getElementById('app-content');
-    tripData.forEach(day => {
-        const card = document.createElement('div');
-        card.className = 'day-card';
-        card.innerHTML = `
-            <div class="day-header">
-                <span>יום ${day.d} | ${day.date} (${day.dayName})</span>
-                <span style="font-size: 0.8em; opacity: 0.9;">${day.area}</span>
-            </div>
-            <div class="row"><div class="label">📍 אתרים</div><div class="data">${createMapLink(day.sights)}</div></div>
-            <div class="row"><div class="label">🛍️ קניות</div><div class="data shop-item">${day.shop}</div></div>
-            <div class="row"><div class="label">☕ אוכל</div><div class="data food-item">${day.food}</div></div>
-            <div class="row"><div class="label">🍹 רופטופ</div><div class="data">${day.roofs}</div></div>
-            <div class="row"><div class="label">⚓ מזחים</div><div class="data pier-tag">${day.piers}</div></div>
-            <div class="row"><div class="label">🚶 רחובות</div><div class="data">${day.streets}</div></div>
-        `;
-        container.appendChild(card);
-    });
-</script>
-
-</body>
-</html>
+    // המידע הראשוני מהטבלה שלך
+    const initialData = [
+        { d: "1", date: "27-Sep", dayName: "א", area: "Flatiron + Midtown", sights: "Madison Sq Park, Flatiron, Gramercy חיצוני, Times Square, Grand Central", shop: "Marshalls (620 6th Ave), TJ Maxx (18 W 33rd), Le Labo Madison", food: "Eataly, Rosetta Bakery, Shake Shack, Hard Rock Café", roofs: "230 Fifth, Refinery, The Skylark, PHD Terrace", piers: "Pier 54, Pier 62", streets: "Broadway, Park Ave South, 5th Ave" },
+        { d: "2", date: "28-Sep", dayName: "ב", area: "Woodbury Outlets", sights: "Woodbury Outlets", shop: "יום קניות מלא - אאוטלט", food: "Food Court", roofs: "בקרבת המלון", piers: "-", streets: "-" },
+        { d: "3", date: "29-Sep", dayName: "ג", area: "Chelsea + Hudson Yards", sights: "Chelsea Market, High Line, Vessel, EDGE, Little Island", shop: "Marshalls (400 W 33rd), Le Labo Hudson Yards", food: "Black Seed Bagels, Magnolia Bakery, Starbucks Roastery", roofs: "Gallow Green, Press Lounge", piers: "Pier 57, Pier 55", streets: "9th Ave, 10th Ave, 14th St" },
+        { d: "4", date: "30-Sep", dayName: "ד", area: "SoHo + Nolita + LES", sights: "Little Italy, Chinatown, Elizabeth Street Garden", shop: "Nordstrom Rack (486 Broadway), Marshalls (478 Broadway), TJ Maxx SoHo", food: "Katz’s Deli, Russ & Daughters, La Cabra", roofs: "PHD Terrace SoHo", piers: "Pier 17, Pier 15, Pier 35", streets: "Prince St, Spring St, Mulberry St" },
+        { d: "5", date: "1-Oct", dayName: "ה", area: "Brooklyn: DUMBO", sights: "770 Eastern Pkwy, Washington St, Brooklyn Bridge Park", shop: "Dumbo Boutiques", food: "Black Seed Bagels, Time Out Market", roofs: "Westlight (Williamsburg)", piers: "Pier 1 DUMBO, Pier 6", streets: "Washington St, Water St" },
+        { d: "6", date: "2-Oct", dayName: "ו", area: "Central Park + Uptown", sights: "The Mall, Bethesda, Bow Bridge, Lincoln Center, Roosevelt Island Tram", shop: "Marshalls (1991 Broadway), TJ Maxx (250 W 57th)", food: "Broadway Bagels", roofs: "The Roof
