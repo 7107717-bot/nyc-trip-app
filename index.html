@@ -3,37 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NYC 2026 App</title>
+    <title>NYC App 2026</title>
     <style>
-        body { font-family: -apple-system, sans-serif; background: #f4f7f6; margin: 0; padding: 10px; direction: rtl; }
-        .header { background: #2c3e50; color: white; text-align: center; padding: 10px; border-radius: 10px; position: sticky; top: 0; z-index: 10; }
-        .nav-btn { background: #27ae60; color: white; display: block; text-align: center; padding: 10px; border-radius: 20px; text-decoration: none; margin: 10px 0; font-weight: bold; }
-        .day, .notes-section { background: white; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); overflow: hidden; border: 1px solid #ddd; }
-        .day-h, .notes-h { background: #3498db; color: white; padding: 8px 12px; font-weight: bold; }
-        .notes-h { background: #9b59b6; }
+        body { font-family: -apple-system, sans-serif; background: #f0f2f5; margin: 0; padding: 10px; direction: rtl; }
+        .app-bar { background: #2c3e50; color: white; text-align: center; padding: 10px; border-radius: 10px; position: sticky; top: 0; z-index: 100; }
+        .nearby-btn { background: #27ae60; color: white; display: block; text-align: center; padding: 12px; border-radius: 25px; text-decoration: none; font-weight: bold; margin: 10px 0; }
+        .card { background: white; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); overflow: hidden; border: 1px solid #ddd; }
+        .card-h { background: #3498db; color: white; padding: 10px; font-weight: bold; }
         .row { display: flex; border-bottom: 1px solid #eee; }
         .lbl { width: 80px; background: #f9f9f9; padding: 8px; font-size: 0.8em; font-weight: bold; color: #666; border-left: 1px solid #eee; flex-shrink: 0; }
         .txt { flex: 1; padding: 8px; font-size: 0.9em; outline: none; min-height: 20px; }
-        .map { color: #007aff; text-decoration: none; font-weight: bold; }
-        .checklist-item { padding: 10px; border-bottom: 1px solid #eee; display: flex; align-items: center; }
-        .checklist-item input { margin-left: 10px; transform: scale(1.2); }
+        .map { color: #007aff; text-decoration: none; font-weight: bold; border-bottom: 1px solid #007aff; }
+        .notes-h { background: #9b59b6; }
     </style>
 </head>
 <body>
 
-<div class="header"><h3>NYC Master 🗽</h3></div>
-<a href="https://www.google.com/maps/search/attractions+near+me" class="nav-btn">📍 מה בסביבה שלי?</a>
+<div class="app-bar"><h3>NYC 2026 🗽</h3></div>
+<a href="https://www.google.com/maps/search/attractions+near+me" class="nearby-btn">📍 מה בסביבה שלי?</a>
 
-<div class="day">
-    <div class="day-h">יום 1 | 27.9 | Flatiron</div>
+<div class="card"><div class="card-h">יום 1 | 27.9 | Flatiron</div>
     <div class="row"><div class="lbl">📍 אתרים</div><div class="txt" contenteditable="true">Madison Sq Park, Flatiron, Times Sq</div></div>
-    <div class="row"><div class="lbl">🛍️ קניות</div><div class="txt" contenteditable="true">Marshalls, TJ Maxx, Le Labo</div></div>
+    <div class="row"><div class="lbl">☕ אוכל</div><div class="txt" contenteditable="true">Eataly, Rosetta Bakery, Shake Shack</div></div>
+    <div class="row"><div class="lbl">⚓ מזחים</div><div class="txt" contenteditable="true">Pier 54, Pier 62</div></div></div>
+
+<div class="card"><div class="card-h">יום 2 | 28.9 | Woodbury</div>
+    <div class="row"><div class="lbl">🛍️ יעד</div><div class="txt" contenteditable="true">Woodbury Outlets - יום קניות מלא</div></div></div>
+
+<div class="card"><div class="card-h">יום 3 | 29.9 | Chelsea</div>
+    <div class="row"><div class="lbl">📍 אתרים</div><div class="txt" contenteditable="true">Chelsea Market, High Line, EDGE, Vessel</div></div>
+    <div class="row"><div class="lbl">☕ אוכל</div><div class="txt" contenteditable="true">Black Seed Bagels, Magnolia</div></div>
+    <div class="row"><div class="lbl">⚓ מזחים</div><div class="txt" contenteditable="true">Pier 57, Pier 55 (Little Island)</div></div></div>
+
+<div class="card"><div class="card-h">יום 4 | 30.9 | SoHo</div>
+    <div class="row"><div class="lbl">📍 אתרים</div><div class="txt" contenteditable="true">Little Italy, Chinatown, Elizabeth St Garden</div></div>
+    <div class="row"><div class="lbl">🛍️ קניות</div><div class="txt" contenteditable="true">Nordstrom Rack, Marshalls, Le Labo</div></div>
+    <div class="row"><div class="lbl">☕ אוכל</div><div class="txt" contenteditable="true">Katz's Deli, La Cabra</div></div></div>
+
+<div class="card"><div class="card-h">יום 5 | 1.10 | Brooklyn</div>
+    <div class="row"><div class="lbl">📍 אתרים</div><div class="txt" contenteditable="true">770 חב"ד, Washington St, DUMBO</div></div>
+    <div class="row"><div class="lbl">☕ אוכל</div><div class="txt" contenteditable="true">Time Out Market, Black Seed</div></div></div>
+
+<div class="card"><div class="card-h">יום 6 | 2.10 | Central Park</div>
+    <div class="row"><div class="lbl">📍 אתרים</div><div class="txt" contenteditable="true">Bethesda, רכבל רוזוולט, Four Freedoms</div></div>
+    <div class="row"><div class="lbl">🛍️ קניות</div><div class="txt" contenteditable="true">Marshalls (1991 Broadway)</div></div></div>
+
+<div class="card"><div class="card-h">יום 7 | 3.10 | Williamsburg</div>
+    <div class="row"><div class="lbl">📍 אתרים</div><div class="txt" contenteditable="true">גשר ברוקלין, Williamsburg, Domino Park</div></div>
+    <div class="row"><div class="lbl">☕ אוכל</div><div class="txt" contenteditable="true">Smorgasburg (שבת), Tompkins Bagels</div></div></div>
+
+<div class="card"><div class="card-h">יום 8 | 4.10 | Washington DC</div>
+    <div class="row"><div class="lbl">📍 אתרים</div><div class="txt" contenteditable="true">הבית הלבן, מוזיאון החלל, Capitol</div></div></div>
+
+<div class="card"><div class="card-h">יום 9 | 5.10 | Jersey Gardens</div>
+    <div class="row"><div class="lbl">🛍️ יעד</div><div class="txt" contenteditable="true">Jersey Gardens Outlet - יום קניות</div></div></div>
+
+<div class="card"><div class="card-h">יום 10 | 6.10 | Downtown</div>
+    <div class="row"><div class="lbl">📍 אתרים</div><div class="txt" contenteditable="true">Wall St, 9/11 Memorial, פסל החירות</div></div>
+    <div class="row"><div class="lbl">⚓ מזחים</div><div class="txt" contenteditable="true">Pier 15, Pier 17</div></div></div>
+
+<div class="card"><div class="card-h">יום 11 | 7.10 | Village</div>
+    <div class="row"><div class="lbl">📍 אתרים</div><div class="txt" contenteditable="true">Union Sq, Washington Sq Park, Friends Bldg</div></div>
+    <div class="row"><div class="lbl">☕ אוכל</div><div class="txt" contenteditable="true">Mama Too Pizza, Bagel Pub</div></div></div>
+
+<div class="card"><div class="card-h">יום 12 | 8.10 | Midtown</div>
+    <div class="row"><div class="lbl">📍 אתרים</div><div class="txt" contenteditable="true">Bryant Park, Times Sq, Macy's</div></div>
+    <div class="row"><div class="lbl">☕ אוכל</div><div class="txt" contenteditable="true">Ess-a-Bagel</div></div></div>
+
+<div class="card">
+    <div class="card-h notes-h">📝 רשימות ופתקים</div>
+    <div class="txt" contenteditable="true" style="padding:15px; min-height: 150px;">
+        כאן תוכלי לכתוב רשימות חופשיות, דברים שראית בדרך או תזכורות...
+    </div>
 </div>
 
-<div class="notes-section">
-    <div class="notes-h">📝 רשימת צ'ק-אין (אתרים)</div>
-    <div class="checklist-item"><input type="checkbox"> <span>Madison Sq Park (Day 1)</span></div>
-    <div class="checklist-item"><input type="checkbox"> <span>Times Square (Day 1)</span></div>
-    <div class="checklist-item"><input type="checkbox"> <span>Woodbury Outlets (Day 2)</span></div>
-    <div class="checklist-item"><input type="checkbox"> <span>Chelsea Market & High Line (Day 3)</span></div>
-    <div class="checklist-item
+<div style="text-align:center; padding:20px; color:#999; font-size:0.8em;">טיסה נעימה! ✨</div>
+
+</body>
+</html>
