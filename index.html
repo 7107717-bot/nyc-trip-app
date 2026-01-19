@@ -2,65 +2,82 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NYC Trip 2026</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NYC Trip Master</title>
     <style>
-        body { font-family: -apple-system, sans-serif; background: #f4f7f6; margin: 0; padding: 15px; direction: rtl; }
-        .header { text-align: center; background: #2c3e50; color: white; padding: 20px; border-radius: 15px; margin-bottom: 20px; }
-        .day-card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-right: 6px solid #3498db; }
-        .day-title { font-weight: bold; color: #2c3e50; font-size: 1.2em; border-bottom: 1px solid #eee; padding-bottom: 8px; margin-bottom: 10px; }
-        .category { margin-bottom: 10px; }
-        .label { font-weight: bold; color: #7f8c8d; font-size: 0.9em; }
-        .text { display: block; color: #333; margin-top: 2px; line-height: 1.4; }
-        .edit-box { width: 100%; border: 1px dashed #3498db; padding: 5px; min-height: 20px; display: block; margin-top: 5px; background: #fff; }
+        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; --success: #27ae60; }
+        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); margin: 0; padding-bottom: 80px; direction: rtl; }
+        
+        /* תפריט עליון קבוע */
+        .top-nav { position: sticky; top: 0; background: white; display: flex; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 1000; }
+        .tab-btn { flex: 1; padding: 15px; border: none; background: none; font-weight: bold; color: #95a5a6; border-bottom: 3px solid transparent; font-size: 16px; }
+        .tab-btn.active { color: var(--accent); border-bottom: 3px solid var(--accent); }
+
+        .container { padding: 15px; display: none; }
+        .container.active { display: block; }
+
+        /* כרטיס יום */
+        .day-card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; border-right: 5px solid var(--accent); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .day-header { font-weight: bold; color: var(--primary); font-size: 1.1em; border-bottom: 1px solid #f0f0f0; margin-bottom: 10px; padding-bottom: 5px; }
+        
+        .category { margin-bottom: 8px; }
+        .label { font-weight: bold; color: #7f8c8d; font-size: 0.85em; display: block; }
+        .editable { display: block; padding: 5px; border: 1px dashed transparent; min-height: 20px; color: #333; line-height: 1.4; }
+        .editable:focus { border: 1px dashed var(--accent); background: #fdfdfd; outline: none; }
+
+        /* רשימות */
+        .note-row { background: white; padding: 12px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .add-note-btn { background: var(--primary); color: white; border: none; width: 100%; padding: 15px; border-radius: 10px; font-weight: bold; margin-bottom: 20px; font-size: 16px; }
+        .del-btn { color: #e74c3c; font-size: 18px; border: none; background: none; padding: 0 10px; }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <h1 style="margin:0;">ניו יורק 2026 🗽</h1>
-    <p>כל המסלול והאתרים (ניתן לערוך בנגיעה)</p>
+<div class="top-nav">
+    <button class="tab-btn active" onclick="showTab('itinerary', this)">🗺️ מסלול (12 יום)</button>
+    <button class="tab-btn" onclick="showTab('notes', this)">📝 רשימות</button>
 </div>
 
-<div class="day-card">
-    <div class="day-title">יום 1 | 27-Sep | Flatiron + Midtown</div>
-    <div class="category"><span class="label">📍 אתרים מרכזיים:</span><span class="text edit-box" contenteditable="true">Madison Sq Park, Flatiron, Gramercy חיצוני, Times Square, Grand Central</span></div>
-    <div class="category"><span class="label">🛍️ קניות:</span><span class="text edit-box" contenteditable="true">Marshalls (6th Ave), TJ Maxx (33rd)</span></div>
-    <div class="category"><span class="label">🚶 רחובות:</span><span class="text edit-box" contenteditable="true">Broadway, 5th Ave, Irving Place</span></div>
-    <div class="category"><span class="label">☕ אוכל:</span><span class="text edit-box" contenteditable="true">Eataly, Rosetta Bakery, Shake Shack</span></div>
+<div id="itinerary" class="container active">
+    <div id="days-list">
+        </div>
 </div>
 
-<div class="day-card">
-    <div class="day-title">יום 2 | 28-Sep | Woodbury Outlets</div>
-    <div class="category"><span class="label">📍 אתרים:</span><span class="text edit-box" contenteditable="true">Woodbury Common Premium Outlets</span></div>
-    <div class="category"><span class="label">🛍️ קניות:</span><span class="text edit-box" contenteditable="true">יום קניות מלא - כל המותגים</span></div>
-    <div class="category"><span class="label">☕ אוכל:</span><span class="text edit-box" contenteditable="true">מתחם האוכל (Food Court)</span></div>
+<div id="notes" class="container">
+    <button class="add-note-btn" onclick="addNote()">+ הוספת פריט לרשימה</button>
+    <div id="notes-list"></div>
 </div>
 
-<div class="day-card">
-    <div class="day-title">יום 3 | 29-Sep | Chelsea + Hudson Yards</div>
-    <div class="category"><span class="label">📍 אתרים מרכזיים:</span><span class="text edit-box" contenteditable="true">Chelsea Market, Starbucks Roastery, High Line, Hudson Yards, Vessel חיצוני, EDGE, Little Island</span></div>
-    <div class="category"><span class="label">🛍️ קניות:</span><span class="text edit-box" contenteditable="true">Marshalls (33rd), Hudson Yards Mall</span></div>
-    <div class="category"><span class="label">🚶 רחובות:</span><span class="text edit-box" contenteditable="true">9th Ave, 10th Ave, 14th St</span></div>
-    <div class="category"><span class="label">☕ אוכל:</span><span class="text edit-box" contenteditable="true">Magnolia Bakery, Black Seed Bagels</span></div>
-</div>
+<script>
+    const defaultDays = [
+        { d: 1, date: "27-Sep", area: "Flatiron + Midtown", sights: "Madison Sq Park, Flatiron, Gramercy, Times Square, Grand Central", shop: "Marshalls (6th Ave), TJ Maxx (33rd)", streets: "Broadway, 5th Ave", food: "Eataly, Rosetta" },
+        { d: 2, date: "28-Sep", area: "Woodbury Outlets", sights: "Woodbury Common", shop: "יום קניות מלא", streets: "-", food: "Food Court" },
+        { d: 3, date: "29-Sep", area: "Chelsea + Hudson Yards", sights: "Chelsea Market, High Line, Edge, Vessel, Little Island", shop: "Hudson Yards Mall", streets: "9th Ave, 10th Ave", food: "Magnolia Bakery" },
+        { d: 4, date: "30-Sep", area: "SoHo + Nolita + LES", sights: "Little Italy, Chinatown, Elizabeth St Garden", shop: "Nordstrom Rack, SoHo Shopping", streets: "Prince St, Spring St", food: "Katz's Deli" },
+        { d: 5, date: "01-Oct", area: "Brooklyn: DUMBO", sights: "770, Washington St, Brooklyn Bridge Park", shop: "Dumbo Shops", streets: "Water St", food: "Black Seed Bagels" },
+        { d: 6, date: "02-Oct", area: "Central Park + Uptown", sights: "Bethesda, Bow Bridge, Lincoln Center, Roosevelt Island Tram", shop: "Marshalls Uptown", streets: "Columbus Ave", food: "Broadway Bagels" },
+        { d: 7, date: "03-Oct", area: "Williamsburg", sights: "Brooklyn Bridge, Williamsburg, Domino Park", shop: "Bedford Ave Shops", streets: "Bedford Ave", food: "Smorgasburg" },
+        { d: 8, date: "04-Oct", area: "Washington DC", sights: "National Mall, Lincoln Memorial, White House, Capitol", shop: "-", streets: "M Street", food: "Georgetown" },
+        { d: 9, date: "05-Oct", area: "Jersey Gardens", sights: "Jersey Gardens Outlet", shop: "יום קניות", streets: "-", food: "Food Court" },
+        { d: 10, date: "06-Oct", area: "Downtown", sights: "Wall Street, 9/11 Memorial, Statue of Liberty", shop: "Century 21", streets: "Stone St", food: "Manhatta" },
+        { d: 11, date: "07-Oct", area: "Union Sq + Village", sights: "Union Sq, Washington Sq Park, Friends Bldg", shop: "Village Shops", streets: "Bleecker St", food: "Mama Too Pizza" },
+        { d: 12, date: "08-Oct", area: "Midtown - Flight", sights: "Bryant Park, Times Square", shop: "Macy's", streets: "5th Ave", food: "Ess-a-Bagel" }
+    ];
 
-<div class="day-card">
-    <div class="day-title">יום 4 | 30-Sep | SoHo + Nolita + LES</div>
-    <div class="category"><span class="label">📍 אתרים מרכזיים:</span><span class="text edit-box" contenteditable="true">Little Italy, Chinatown, Elizabeth Street Garden, Nordstrom Rack Broadway</span></div>
-    <div class="category"><span class="label">🛍️ קניות:</span><span class="text edit-box" contenteditable="true">SoHo Shopping, TJ Maxx Broadway</span></div>
-    <div class="category"><span class="label">🚶 רחובות:</span><span class="text edit-box" contenteditable="true">Prince St, Spring St, Mulberry St</span></div>
-    <div class="category"><span class="label">☕ אוכל:</span><span class="text edit-box" contenteditable="true">Katz's Deli, La Cabra</span></div>
-</div>
+    let tripData = JSON.parse(localStorage.getItem('nyc_final_v1')) || defaultDays;
+    let myNotes = JSON.parse(localStorage.getItem('nyc_notes_v1')) || ["לא לשכוח דרכון"];
 
-<div class="day-card">
-    <div class="day-title">יום 5 | 01-Oct | Brooklyn: DUMBO</div>
-    <div class="category"><span class="label">📍 אתרים מרכזיים:</span><span class="text edit-box" contenteditable="true">770, Washington St, Brooklyn Bridge Park, Time Out Market</span></div>
-    <div class="category"><span class="label">🛍️ קניות:</span><span class="text edit-box" contenteditable="true">Dumbo Boutiques, Williamsburg Shops</span></div>
-    <div class="category"><span class="label">🚶 רחובות:</span><span class="text edit-box" contenteditable="true">Washington St, Water St, Kent Ave</span></div>
-    <div class="category"><span class="label">☕ אוכל:</span><span class="text edit-box" contenteditable="true">Black Seed Bagels</span></div>
-</div>
+    function showTab(id, btn) {
+        document.querySelectorAll('.container').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        btn.classList.add('active');
+    }
 
-<div class="day-card">
-    <div class="day-title">יום 6 | 02-Oct | Central Park + Uptown</div>
-    <div class="category"><span class="label">📍 אתרים מרכזיים:</span><span class="text edit-box" contenteditable="true">The Mall, Bethesda, Bow Bridge,
+    function renderDays() {
+        const container = document.getElementById('days-list');
+        container.innerHTML = tripData.map((day, i) => `
+            <div class="day-card">
+                <div class="day-header">יום ${day.d} | ${day.date} - ${day.area}</div>
+                <div class="category"><span class="label">📍 אתרים:</span><span class="editable" contenteditable="true" onblur="updateDay(${i}, 'sights', this.innerText)">${day.sights}</span></div>
+                <div class="category"><span class="label">🛍️ קניות:</span><span class="editable" contenteditable="true" onblur="updateDay(${i}, 'shop', this.innerText)">${day.shop}</span></div>
