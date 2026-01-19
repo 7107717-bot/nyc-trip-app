@@ -3,103 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NYC 2026 - My Travel App</title>
+    <title>NYC Trip 2026 - המדריך המלא</title>
     <style>
-        :root { --primary: #2c3e50; --secondary: #3498db; --bg: #f0f2f5; --success: #27ae60; }
-        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); margin: 0; direction: rtl; color: #333; }
+        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f8f9fa; --text: #333; }
+        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); margin: 0; direction: rtl; color: var(--text); }
+        .app-bar { background: var(--primary); color: white; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         
-        /* Header & Navigation */
-        .app-bar { background: var(--primary); color: white; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
-        .tabs { display: flex; background: white; border-bottom: 1px solid #ddd; }
-        .tab { flex: 1; padding: 12px; text-align: center; font-weight: bold; color: #7f8c8d; cursor: pointer; }
-        .tab.active { color: var(--secondary); border-bottom: 3px solid var(--secondary); }
+        /* Tabs */
+        .tabs { display: flex; background: white; position: sticky; top: 55px; z-index: 999; border-bottom: 1px solid #ddd; }
+        .tab { flex: 1; padding: 15px; text-align: center; font-weight: bold; color: #7f8c8d; cursor: pointer; border-bottom: 3px solid transparent; }
+        .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
 
-        /* Day Cards */
-        .content-area { padding: 10px; margin-bottom: 60px; }
-        .day-card { background: white; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 3px 10px rgba(0,0,0,0.08); overflow: hidden; }
-        .day-header { background: var(--secondary); color: white; padding: 12px; font-weight: bold; display: flex; justify-content: space-between; }
+        .content { padding: 15px; padding-bottom: 80px; }
+        .day-card { background: white; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); overflow: hidden; border: 1px solid #eee; }
+        .day-header { background: var(--accent); color: white; padding: 12px 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
         
-        .info-table { width: 100%; border-collapse: collapse; }
-        .row { border-bottom: 1px solid #f2f2f2; display: flex; }
-        .lbl { width: 85px; background: #f9fbfd; padding: 10px 8px; font-size: 0.75em; font-weight: bold; color: #7f8c8d; border-left: 1px solid #f2f2f2; flex-shrink: 0; }
-        .val { flex: 1; padding: 10px; font-size: 0.9em; line-height: 1.4; outline: none; }
-        
-        /* Links & Buttons */
-        .map-link { color: #007aff; text-decoration: none; font-weight: 500; }
-        .btn-nearby { background: var(--success); color: white; display: block; text-align: center; padding: 12px; margin: 10px; border-radius: 25px; text-decoration: none; font-weight: bold; }
-        
-        /* Checklist */
-        .checklist-item { display: flex; align-items: center; padding: 12px; border-bottom: 1px solid #eee; background: white; }
-        .checklist-item input { margin-left: 10px; width: 20px; height: 20px; }
+        .info-row { border-bottom: 1px solid #f9f9f9; display: flex; align-items: stretch; }
+        .label { width: 90px; background: #fcfcfc; padding: 12px 10px; font-size: 0.8em; font-weight: bold; color: #7f8c8d; border-left: 1px solid #eee; flex-shrink: 0; display: flex; align-items: center; }
+        .data { flex: 1; padding: 12px; font-size: 0.95em; line-height: 1.5; outline: none; }
+        .data:focus { background: #fffde7; }
 
+        .btn-maps { background: #27ae60; color: white; display: block; text-align: center; padding: 15px; border-radius: 30px; text-decoration: none; font-weight: bold; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .hidden { display: none; }
+        
+        /* Checklist Style */
+        .checklist-item { display: flex; align-items: center; padding: 12px; border-bottom: 1px solid #eee; background: white; }
+        .checklist-item input { margin-left: 12px; width: 22px; height: 22px; }
     </style>
 </head>
 <body>
 
-<div class="app-bar">
-    <h2 style="margin:0; font-size: 1.1em;">NYC Trip Master 🗽</h2>
-</div>
+<div class="app-bar"><h2 style="margin:0; font-size: 1.2em;">NYC Master App 🗽</h2></div>
 
 <div class="tabs">
-    <div class="tab active" onclick="showTab('days')">🗓️ מסלול</div>
-    <div class="tab" onclick="showTab('notes')">📝 רשימות</div>
+    <div class="tab active" onclick="switchTab('days')">🗓️ מסלול</div>
+    <div class="tab" onclick="switchTab('lists')">📝 רשימות</div>
 </div>
 
-<div id="days-tab" class="content-area">
-    <a href="https://www.google.com/maps/search/attractions+near+me" class="btn-nearby">📍 מה בסביבה שלי עכשיו?</a>
-    <div id="itinerary-container"></div>
+<div id="days-section" class="content">
+    <a href="https://www.google.com/maps/search/attractions+near+me" class="btn-maps">📍 מה בסביבה שלי עכשיו?</a>
+    <div id="itinerary"></div>
 </div>
 
-<div id="notes-tab" class="content-area hidden">
+<div id="lists-section" class="content hidden">
     <div class="day-card">
-        <div class="day-header" style="background:#9b59b6;">✅ צ'ק ליסט מהיר</div>
-        <div id="checklist-container"></div>
-    </div>
-    <div class="day-card">
-        <div class="day-header" style="background:#34495e;">📔 פתקים חופשיים</div>
-        <div class="val" contenteditable="true" id="free-notes" style="padding:15px; min-height: 200px;" onblur="saveNotes()">
-            כאן תוכלי להוסיף רשימות קניות, מספרי הזמנות או מחשבות...
+        <div class="day-header" style="background: #9b59b6;">🛍️ רשימת קניות (לבדוק)</div>
+        <div class="data" contenteditable="true" id="shopping-list">
+            • ספורה (קונסילר נגד כהויות)<br>
+            • יוניקלו<br>
+            • אאוטלט - להוציא רשימות ומיקומים<br>
+            • בייגלס מומלצים
         </div>
     </div>
-</div>
-
-<script>
-    // הנתונים המלאים מהאקסל שלך
-    const initialData = [
-        { d: "1", date: "27.09", area: "Flatiron + Midtown", sights: "Madison Sq Park, Times Square, Grand Central", shop: "Marshalls (620 6th Ave), TJ Maxx (33rd), Le Labo Madison", food: "Eataly, Shake Shack, Rosetta Bakery", roof: "230 Fifth, Refinery", pier: "Pier 54, Pier 62", streets: "Broadway, 5th Ave" },
-        { d: "2", date: "28.09", area: "Woodbury Outlets", sights: "Woodbury Outlets Shopping", shop: "יום קניות מלא - אאוטלט", food: "Food Court", roof: "-", pier: "-", streets: "-" },
-        { d: "3", date: "29.09", area: "Chelsea + Hudson Yards", sights: "Chelsea Market, High Line, Vessel, EDGE", shop: "Marshalls (400 W 33rd), Le Labo Hudson", food: "Black Seed Bagels, Magnolia", roof: "Press Lounge", pier: "Pier 57, Little Island (Pier 55)", streets: "9th Ave, 14th St" },
-        { d: "4", date: "30.09", area: "SoHo + Nolita + LES", sights: "Little Italy, Chinatown, Elizabeth St Garden", shop: "Nordstrom Rack, Marshalls SoHo", food: "Katz’s Deli, La Cabra", roof: "PHD Terrace", pier: "Pier 17, Pier 15", streets: "Prince St, Spring St" },
-        { d: "5", date: "01.10", area: "Brooklyn: DUMBO", sights: "770 Eastern Pkwy, Washington St, Brooklyn Bridge Park", shop: "Dumbo Boutiques", food: "Time Out Market", roof: "Westlight", pier: "Pier 1 Dumbo", streets: "Water St" },
-        { d: "6", date: "02.10", area: "Central Park + Uptown", sights: "The Mall, Bethesda, Roosevelt Island Tram", shop: "TJ Maxx (250 W 57th)", food: "Broadway Bagels", roof: "The Roof at Viceroy", pier: "Roosevelt Island Tram", streets: "Madison Ave" },
-        { d: "7", date: "03.10", area: "Williamsburg", sights: "Brooklyn Bridge, Williamsburg, Domino Park", shop: "Williamsburg Shops", food: "Smorgasburg, Tompkins Sq Bagels", roof: "Wythe Hotel", pier: "East River Ferry", streets: "Bedford Ave" },
-        { d: "8", date: "04.10", area: "Washington DC", sights: "National Mall, White House, Capitol, Air & Space", shop: "-", food: "Georgetown Food", roof: "-", pier: "-", streets: "M Street" },
-        { d: "9", date: "05.10", area: "Jersey Gardens", sights: "Jersey Gardens Outlet", shop: "יום קניות מלא", food: "Food Court", roof: "-", pier: "-", streets: "-" },
-        { d: "10", date: "06.10", area: "Downtown + Liberty", sights: "Wall Street, 9/11 Memorial, Statue of Liberty", shop: "Century 21, Le Labo", food: "Manhatta, Stone St", roof: "The Skylark", pier: "Pier 15", streets: "Stone St" },
-        { d: "11", date: "07.10", area: "Union Sq + Village", sights: "Union Sq, Washington Sq Park, Friends Bldg", shop: "Marshalls (6th Ave)", food: "Mama Too Pizza, Bagel Pub", roof: "PHD Terrace", pier: "Pier 46", streets: "Bleecker St" },
-        { d: "12", date: "08.10", area: "Midtown - טיסה", sights: "Bryant Park, Times Sq", shop: "Macy’s (151 W 34th)", food: "Ess-a-Bagel", roof: "Refinery", pier: "Pier 62", streets: "5th Ave" }
-    ];
-
-    let currentData = JSON.parse(localStorage.getItem('nyc_trip_data')) || initialData;
-    let savedNotes = localStorage.getItem('nyc_free_notes') || "";
-
-    function showTab(tabName) {
-        document.getElementById('days-tab').classList.toggle('hidden', tabName !== 'days');
-        document.getElementById('notes-tab').classList.toggle('hidden', tabName !== 'notes');
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        event.target.classList.add('active');
-    }
-
-    function renderApp() {
-        const container = document.getElementById('itinerary-container');
-        container.innerHTML = currentData.map((day, i) => `
-            <div class="day-card">
-                <div class="day-header">
-                    <span>יום ${day.d} | ${day.date}</span>
-                    <span>${day.area}</span>
-                </div>
-                <div class="row"><div class="lbl">📍 אתרים</div><div class="val" contenteditable="true" onblur="updateData(${i}, 'sights', this.innerText)">${day.sights}</div></div>
-                <div class="row"><div class="lbl">🛍️ קניות</div><div class="val" contenteditable="true" onblur="updateData(${i}, 'shop', this.innerText)">${day.shop}</div></div>
-                <div class="row"><div class="lbl">☕ אוכל</div><div class="val" contenteditable="true" onblur="updateData(${i}, 'food', this.innerText)">${day.food}</div></div>
-                <div class="row"><div class="lbl">🍹 רופטופ</div><div class="val" contenteditable="true" onblur="updateData(${i},
+    <div class="day-card">
+        <div class="day-header" style="background: #e67e22;">📋 צ'ק ליסט את
