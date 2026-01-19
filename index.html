@@ -3,81 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NYC Trip Master</title>
+    <title>NYC 2026</title>
     <style>
-        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; --success: #27ae60; }
-        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); margin: 0; padding-bottom: 80px; direction: rtl; }
-        
-        /* תפריט עליון קבוע */
-        .top-nav { position: sticky; top: 0; background: white; display: flex; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 1000; }
-        .tab-btn { flex: 1; padding: 15px; border: none; background: none; font-weight: bold; color: #95a5a6; border-bottom: 3px solid transparent; font-size: 16px; }
+        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; }
+        body { font-family: -apple-system, sans-serif; background: var(--bg); margin: 0; padding-bottom: 80px; direction: rtl; }
+        .tabs { position: sticky; top: 0; background: white; display: flex; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 1000; }
+        .tab-btn { flex: 1; padding: 15px; border: none; background: none; font-weight: bold; color: #95a5a6; border-bottom: 3px solid transparent; }
         .tab-btn.active { color: var(--accent); border-bottom: 3px solid var(--accent); }
-
         .container { padding: 15px; display: none; }
         .container.active { display: block; }
-
-        /* כרטיס יום */
         .day-card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; border-right: 5px solid var(--accent); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .day-header { font-weight: bold; color: var(--primary); font-size: 1.1em; border-bottom: 1px solid #f0f0f0; margin-bottom: 10px; padding-bottom: 5px; }
-        
-        .category { margin-bottom: 8px; }
-        .label { font-weight: bold; color: #7f8c8d; font-size: 0.85em; display: block; }
-        .editable { display: block; padding: 5px; border: 1px dashed transparent; min-height: 20px; color: #333; line-height: 1.4; }
-        .editable:focus { border: 1px dashed var(--accent); background: #fdfdfd; outline: none; }
-
-        /* רשימות */
-        .note-row { background: white; padding: 12px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        .add-note-btn { background: var(--primary); color: white; border: none; width: 100%; padding: 15px; border-radius: 10px; font-weight: bold; margin-bottom: 20px; font-size: 16px; }
-        .del-btn { color: #e74c3c; font-size: 18px; border: none; background: none; padding: 0 10px; }
+        .day-title { font-weight: bold; color: var(--primary); margin-bottom: 10px; border-bottom: 1px solid #eee; }
+        .label { font-weight: bold; color: #7f8c8d; font-size: 0.85em; display: block; margin-top: 8px; }
+        .editable { display: block; padding: 5px; min-height: 20px; color: #333; outline: none; border: 1px dashed transparent; }
+        .editable:focus { border-color: var(--accent); background: #fafafa; }
+        .note-row { background: white; padding: 12px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .fix-btn { background: #e74c3c; color: white; border: none; width: 100%; padding: 15px; font-weight: bold; border-radius: 10px; margin-top: 20px; }
+        .add-btn { background: var(--primary); color: white; border: none; width: 100%; padding: 12px; border-radius: 10px; margin-bottom: 15px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="top-nav">
-    <button class="tab-btn active" onclick="showTab('itinerary', this)">🗺️ מסלול (12 יום)</button>
-    <button class="tab-btn" onclick="showTab('notes', this)">📝 רשימות</button>
+<div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('itinerary', this)">🗺️ מסלול</button>
+    <button class="tab-btn" onclick="switchTab('notes', this)">📝 רשימות</button>
 </div>
 
 <div id="itinerary" class="container active">
-    <div id="days-list">
-        </div>
+    <div id="days-list"></div>
+    <button class="fix-btn" onclick="forceReset()">תיקון תצוגה וטעינת 12 ימים 🛠️</button>
 </div>
 
 <div id="notes" class="container">
-    <button class="add-note-btn" onclick="addNote()">+ הוספת פריט לרשימה</button>
+    <button class="add-btn" onclick="addNote()">+ הוסף רשימה</button>
     <div id="notes-list"></div>
 </div>
 
 <script>
-    const defaultDays = [
-        { d: 1, date: "27-Sep", area: "Flatiron + Midtown", sights: "Madison Sq Park, Flatiron, Gramercy, Times Square, Grand Central", shop: "Marshalls (6th Ave), TJ Maxx (33rd)", streets: "Broadway, 5th Ave", food: "Eataly, Rosetta" },
+    const data12 = [
+        { d: 1, date: "27-Sep", area: "Flatiron + Midtown", sights: "Madison Sq Park, Flatiron, Times Square, Grand Central", shop: "Marshalls, TJ Maxx", streets: "Broadway, 5th Ave", food: "Eataly" },
         { d: 2, date: "28-Sep", area: "Woodbury Outlets", sights: "Woodbury Common", shop: "יום קניות מלא", streets: "-", food: "Food Court" },
-        { d: 3, date: "29-Sep", area: "Chelsea + Hudson Yards", sights: "Chelsea Market, High Line, Edge, Vessel, Little Island", shop: "Hudson Yards Mall", streets: "9th Ave, 10th Ave", food: "Magnolia Bakery" },
-        { d: 4, date: "30-Sep", area: "SoHo + Nolita + LES", sights: "Little Italy, Chinatown, Elizabeth St Garden", shop: "Nordstrom Rack, SoHo Shopping", streets: "Prince St, Spring St", food: "Katz's Deli" },
+        { d: 3, date: "29-Sep", area: "Chelsea + Hudson Yards", sights: "Chelsea Market, High Line, EDGE, Little Island", shop: "Hudson Yards Mall", streets: "9th & 10th Ave", food: "Magnolia Bakery" },
+        { d: 4, date: "30-Sep", area: "SoHo + Nolita", sights: "Little Italy, Chinatown, Elizabeth St Garden", shop: "SoHo Shopping", streets: "Prince St, Spring St", food: "Katz's Deli" },
         { d: 5, date: "01-Oct", area: "Brooklyn: DUMBO", sights: "770, Washington St, Brooklyn Bridge Park", shop: "Dumbo Shops", streets: "Water St", food: "Black Seed Bagels" },
-        { d: 6, date: "02-Oct", area: "Central Park + Uptown", sights: "Bethesda, Bow Bridge, Lincoln Center, Roosevelt Island Tram", shop: "Marshalls Uptown", streets: "Columbus Ave", food: "Broadway Bagels" },
+        { d: 6, date: "02-Oct", area: "Central Park + Uptown", sights: "Bethesda, Bow Bridge, Roosevelt Island Tram", shop: "Marshalls Uptown", streets: "Columbus Ave", food: "Broadway Bagels" },
         { d: 7, date: "03-Oct", area: "Williamsburg", sights: "Brooklyn Bridge, Williamsburg, Domino Park", shop: "Bedford Ave Shops", streets: "Bedford Ave", food: "Smorgasburg" },
-        { d: 8, date: "04-Oct", area: "Washington DC", sights: "National Mall, Lincoln Memorial, White House, Capitol", shop: "-", streets: "M Street", food: "Georgetown" },
+        { d: 8, date: "04-Oct", area: "Washington DC", sights: "National Mall, White House, Capitol, Air & Space", shop: "-", streets: "M Street", food: "Georgetown" },
         { d: 9, date: "05-Oct", area: "Jersey Gardens", sights: "Jersey Gardens Outlet", shop: "יום קניות", streets: "-", food: "Food Court" },
         { d: 10, date: "06-Oct", area: "Downtown", sights: "Wall Street, 9/11 Memorial, Statue of Liberty", shop: "Century 21", streets: "Stone St", food: "Manhatta" },
         { d: 11, date: "07-Oct", area: "Union Sq + Village", sights: "Union Sq, Washington Sq Park, Friends Bldg", shop: "Village Shops", streets: "Bleecker St", food: "Mama Too Pizza" },
         { d: 12, date: "08-Oct", area: "Midtown - Flight", sights: "Bryant Park, Times Square", shop: "Macy's", streets: "5th Ave", food: "Ess-a-Bagel" }
     ];
 
-    let tripData = JSON.parse(localStorage.getItem('nyc_final_v1')) || defaultDays;
-    let myNotes = JSON.parse(localStorage.getItem('nyc_notes_v1')) || ["לא לשכוח דרכון"];
-
-    function showTab(id, btn) {
+    function switchTab(id, btn) {
         document.querySelectorAll('.container').forEach(c => c.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         btn.classList.add('active');
     }
 
-    function renderDays() {
-        const container = document.getElementById('days-list');
-        container.innerHTML = tripData.map((day, i) => `
+    function render() {
+        const trip = JSON.parse(localStorage.getItem('nyc_v20')) || data12;
+        document.getElementById('days-list').innerHTML = trip.map((day, i) => `
             <div class="day-card">
-                <div class="day-header">יום ${day.d} | ${day.date} - ${day.area}</div>
-                <div class="category"><span class="label">📍 אתרים:</span><span class="editable" contenteditable="true" onblur="updateDay(${i}, 'sights', this.innerText)">${day.sights}</span></div>
-                <div class="category"><span class="label">🛍️ קניות:</span><span class="editable" contenteditable="true" onblur="updateDay(${i}, 'shop', this.innerText)">${day.shop}</span></div>
+                <div class="day-title">יום ${day.d} | ${day.date} - ${day.area}</div>
+                <span class="label">📍 אתרים:</span><div class="editable" contenteditable="true" onblur="save(${i},'sights',this.innerText)">${day.sights}</div>
+                <span class="label">🛍️ קניות:</span><div class="editable" contenteditable="true" onblur="save(${i},'shop',this.innerText)">${day.shop}</div>
+                <span class="label">🚶 רחובות:</span><div class="editable" contenteditable="true" onblur="save(${i},'streets',this.innerText)">${day.streets}</div>
+                <span class="label">☕ אוכל:</span><div class="editable" contenteditable="true" onblur="save(${i},'food',this.innerText)">${day.food}</div>
+            </div>
+        `).join('');
+
+        const notes = JSON.parse(localStorage.getItem('notes_v20')) || ["רשימה ריקה"];
+        document.getElementById('notes-list').innerHTML = notes.map((n, i) => `
+            <div class="note-row"><span>${n}</span><button onclick="delNote(${i})" style="color:red;border:none;background:none;">✖</button></div>
+        `).join('');
+    }
+
+    function save(i, field, text) {
+        let trip = JSON.parse(localStorage.getItem('nyc_v20')) || data12;
+        trip[i][field] = text;
+        localStorage.setItem('nyc_v20', JSON.stringify(trip));
+    }
+
+    function forceReset() {
+        localStorage.clear();
+        localStorage.setItem('nyc_v20', JSON.stringify(data12));
+        location.reload();
+    }
+
+    function addNote() {
+        const v = prompt("מה להוסיף?");
+        if(v) {
+            let n = JSON.parse(localStorage.getItem('notes_v20')) || [];
+            n.push(v);
+            localStorage.setItem('notes_v20', JSON.stringify(n));
+            render();
+        }
+    }
+
+    function delNote(i) {
+        let n = JSON.parse(localStorage.getItem('notes_v20'));
+        n.splice(i,1);
+        localStorage.setItem('notes_v20', JSON.stringify(n));
+        render();
+    }
+
+    // הפעלה ראשונה
+    if(!localStorage.getItem('nyc_v20')) { localStorage.setItem('nyc_v20', JSON.stringify(data12)); }
+    render();
+</script>
+</body>
+</html>
