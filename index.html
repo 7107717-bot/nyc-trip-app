@@ -3,137 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NYC Trip 2026 - Ultimate</title>
+    <title>NYC Trip 2026</title>
     <style>
-        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; --success: #27ae60; }
-        body { font-family: -apple-system, sans-serif; background: var(--bg); margin: 0; padding-bottom: 90px; direction: rtl; }
+        body { font-family: -apple-system, sans-serif; background: #f4f7f6; margin: 0; padding-bottom: 80px; direction: rtl; }
+        .tab-nav { position: sticky; top: 0; background: #2c3e50; display: flex; z-index: 1000; padding: 5px; }
+        .tab-btn { flex: 1; padding: 12px; border: none; background: none; color: white; font-weight: bold; font-size: 15px; opacity: 0.6; }
+        .tab-btn.active { opacity: 1; border-bottom: 3px solid #3498db; }
         
-        .tabs { position: sticky; top: 0; background: white; display: flex; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 1000; }
-        .tab-btn { flex: 1; padding: 15px; border: none; background: none; font-weight: bold; color: #95a5a6; border-bottom: 3px solid transparent; }
-        .tab-btn.active { color: var(--accent); border-bottom: 3px solid var(--accent); }
-        
-        .container { padding: 12px; display: none; }
-        .container.active { display: block; }
+        .content { padding: 15px; display: none; }
+        .content.active { display: block; }
 
-        .day-card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; border-right: 5px solid var(--accent); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .day-title { font-weight: bold; color: var(--primary); font-size: 1.1em; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 10px; }
+        .day-card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-right: 5px solid #3498db; }
+        .day-title { font-weight: bold; color: #2c3e50; font-size: 1.1em; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 10px; }
         
         .label { font-weight: bold; color: #7f8c8d; font-size: 0.85em; display: block; margin-top: 8px; }
-        .editable { display: block; padding: 4px; min-height: 20px; color: #333; outline: none; border: 1px dashed transparent; line-height: 1.4; }
-        .editable:focus { border-color: var(--accent); background: #f9f9f9; }
-        .editable a { color: var(--accent); text-decoration: none; font-weight: 500; }
-
-        .file-section { background: white; padding: 15px; border-radius: 12px; margin-bottom: 15px; text-align: center; border: 2px dashed #ddd; }
-        .note-row { background: white; padding: 12px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .text { display: block; color: #333; line-height: 1.4; padding: 4px 0; }
+        .nav-link { color: #3498db; text-decoration: none; font-weight: 500; }
         
-        .btn { padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-fix { background: #e74c3c; color: white; margin-top: 30px; }
-        .btn-add { background: var(--success); color: white; }
+        .file-box { border: 2px dashed #ccc; padding: 20px; text-align: center; border-radius: 10px; background: white; }
+        .note-item { background: white; padding: 12px; margin-bottom: 8px; border-radius: 8px; display: flex; justify-content: space-between; }
     </style>
 </head>
 <body>
 
-<div class="tabs">
-    <button class="tab-btn active" onclick="switchTab('itinerary', this)">🗺️ מסלול</button>
-    <button class="tab-btn" onclick="switchTab('files', this)">📂 מסמכים</button>
-    <button class="tab-btn" onclick="switchTab('notes', this)">📝 רשימות</button>
+<div class="tab-nav">
+    <button class="tab-btn active" onclick="openTab(event, 'itinerary')">🗺️ מסלול</button>
+    <button class="tab-btn" onclick="openTab(event, 'files')">📂 מסמכים</button>
+    <button class="tab-btn" onclick="openTab(event, 'notes')">📝 רשימות</button>
 </div>
-
-<div id="itinerary" class="container active">
-    <div id="days-list"></div>
-    <button class="btn btn-fix" onclick="forceLoad()">🔄 טעינת נתונים חסרים (12 ימים)</button>
-</div>
-
-<div id="files" class="container">
-    <div class="file-section">
-        <p>העלאת שוברים, רשימות חנויות או PDF</p>
-        <input type="file" id="fileInput" style="display:none" onchange="handleFile(this)">
-        <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">+ בחר קובץ להעלאה</button>
-    </div>
-    <div id="file-list"></div>
-</div>
-
-<div id="notes" class="container">
-    <button class="btn btn-add" onclick="addNote()">+ הוספת פריט לרשימה</button>
-    <div id="notes-list" style="margin-top:15px;"></div>
-</div>
-
-<script>
-    const gMap = (q) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q + " New York")}`;
-    
-    const initialData = [
-        { d: 1, date: "27-Sep", area: "Flatiron + Midtown", sights: `<a href="${gMap('Madison Square Park')}">Madison Sq Park</a>, <a href="${gMap('Flatiron Building')}">Flatiron</a>, <a href="${gMap('Gramercy Park')}">Gramercy חיצוני</a>, <a href="${gMap('Times Square')}">Times Square</a>, <a href="${gMap('Grand Central Terminal')}">Grand Central</a>`, shop: "Marshalls (6th Ave), TJ Maxx (33rd)", streets: "Broadway, 5th Ave, Irving Place", food: "Eataly, Rosetta" },
-        { d: 2, date: "28-Sep", area: "Woodbury Outlets", sights: `<a href="${gMap('Woodbury Common Premium Outlets')}">Woodbury Common Outlets</a>`, shop: "יום קניות מלא - העלי רשימת חנויות במסמכים", streets: "-", food: "Food Court" },
-        { d: 3, date: "29-Sep", area: "Chelsea + Hudson Yards", sights: `<a href="${gMap('Chelsea Market')}">Chelsea Market</a>, <a href="${gMap('High Line')}">High Line</a>, <a href="${gMap('Vessel')}">Vessel</a>, <a href="${gMap('The Edge')}">EDGE</a>, <a href="${gMap('Little Island')}">Little Island (Pier 55)</a>, <a href="${gMap('Pier 57')}">Pier 57</a>`, shop: "Hudson Yards Mall", streets: "9th & 10th Ave", food: "Magnolia Bakery, Starbucks Roastery" },
-        { d: 4, date: "30-Sep", area: "SoHo + Nolita + LES", sights: `<a href="${gMap('Little Italy')}">Little Italy</a>, <a href="${gMap('Chinatown')}">Chinatown</a>, <a href="${gMap('Elizabeth Street Garden')}">Elizabeth St Garden</a>`, shop: "SoHo Shopping, Nordstrom Rack Broadway", streets: "Prince St, Spring St, Mulberry St", food: "Katz's Deli, La Cabra" },
-        { d: 5, date: "01-Oct", area: "Brooklyn: DUMBO", sights: `<a href="${gMap('770 Eastern Parkway')}">בית חב"ד 770</a>, <a href="${gMap('Washington St Dumbo')}">Washington St (צילום)</a>, <a href="${gMap('Brooklyn Bridge Park')}">Brooklyn Bridge Park</a>, <a href="${gMap('Time Out Market')}">Time Out Market</a>`, shop: "Dumbo Boutiques", streets: "Water St, Washington St", food: "Black Seed Bagels" },
-        { d: 6, date: "02-Oct", area: "Central Park + Uptown", sights: `<a href="${gMap('Bethesda Terrace')}">Bethesda Terrace</a>, <a href="${gMap('Bow Bridge')}">Bow Bridge</a>, <a href="${gMap('Roosevelt Island Tramway')}">רכבל רוזוולט</a>, <a href="${gMap('Four Freedoms Park')}">Four Freedoms Park</a>`, shop: "Marshalls Uptown", streets: "Columbus Ave", food: "Broadway Bagels" },
-        { d: 7, date: "03-Oct", area: "Williamsburg", sights: `<a href="${gMap('Brooklyn Bridge')}">Brooklyn Bridge</a>, <a href="${gMap('Domino Park')}">Domino Park</a>, <a href="${gMap('Williamsburg')}">Williamsburg</a>`, shop: "Bedford Ave Shops", streets: "Bedford Ave", food: "Smorgasburg (שבת)" },
-        { d: 8, date: "04-Oct", area: "Washington DC", sights: `<a href="https://www.google.com/maps/search/?api=1&query=National+Mall+Washington+DC">National Mall</a>, <a href="https://www.google.com/maps/search/?api=1&query=Air+and+Space+Museum+DC">מוזיאון החלל</a>, הבית הלבן, קפיטול`, shop: "-", streets: "M Street Georgetown", food: "Georgetown Cupcakes" },
-        { d: 9, date: "05-Oct", area: "Jersey Gardens", sights: `<a href="${gMap('The Mills at Jersey Gardens')}">Jersey Gardens Outlet</a>`, shop: "יום קניות", streets: "-", food: "Food Court" },
-        { d: 10, date: "06-Oct", area: "Downtown", sights: `<a href="${gMap('Wall Street')}">Wall Street</a>, <a href="${gMap('9/11 Memorial')}">9/11 Memorial</a>, <a href="${gMap('Statue of Liberty Ferry')}">פסל החירות</a>, <a href="${gMap('Battery Park')}">Battery Park</a>`, shop: "Century 21", streets: "Stone St", food: "Manhatta" },
-        { d: 11, date: "07-Oct", area: "Union Sq + Village", sights: `<a href="${gMap('Union Square')}">Union Sq</a>, <a href="${gMap('Washington Square Park')}">Washington Sq Park</a>, <a href="${gMap('Friends Building')}">Friends Building</a>`, shop: "Village Shops", streets: "Bleecker St", food: "Mama Too Pizza" },
-        { d: 12, date: "08-Oct", area: "Midtown - טיסה", sights: `<a href="${gMap('Bryant Park')}">Bryant Park</a>, <a href="${gMap('Times Square')}">Times Square</a>`, shop: "Macy's Herald Square", streets: "5th Ave", food: "Ess-a-Bagel" }
-    ];
-
-    function switchTab(id, btn) {
-        document.querySelectorAll('.container').forEach(c => c.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        btn.classList.add('active');
-    }
-
-    function render() {
-        const trip = JSON.parse(localStorage.getItem('nyc_v25')) || initialData;
-        document.getElementById('days-list').innerHTML = trip.map((day, i) => `
-            <div class="day-card">
-                <div class="day-title">יום ${day.d} | ${day.date} - ${day.area}</div>
-                <span class="label">📍 אתרים (ניווט):</span><div class="editable" contenteditable="true" onblur="save(${i},'sights',this.innerHTML)">${day.sights}</div>
-                <span class="label">🛍️ קניות:</span><div class="editable" contenteditable="true" onblur="save(${i},'shop',this.innerText)">${day.shop}</div>
-                <span class="label">🚶 רחובות:</span><div class="editable" contenteditable="true" onblur="save(${i},'streets',this.innerText)">${day.streets}</div>
-                <span class="label">☕ אוכל:</span><div class="editable" contenteditable="true" onblur="save(${i},'food',this.innerText)">${day.food}</div>
-            </div>
-        `).join('');
-        renderNotes();
-        renderFiles();
-    }
-
-    function save(i, field, text) {
-        let trip = JSON.parse(localStorage.getItem('nyc_v25')) || initialData;
-        trip[i][field] = text;
-        localStorage.setItem('nyc_v25', JSON.stringify(trip));
-    }
-
-    function forceLoad() {
-        localStorage.removeItem('nyc_v25');
-        localStorage.setItem('nyc_v25', JSON.stringify(initialData));
-        location.reload();
-    }
-
-    // --- קבצים ---
-    function handleFile(input) {
-        const file = input.files[0];
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            let files = JSON.parse(localStorage.getItem('nyc_files')) || [];
-            files.push({ name: file.name, data: e.target.result });
-            localStorage.setItem('nyc_files', JSON.stringify(files));
-            renderFiles();
-        };
-        reader.readAsDataURL(file);
-    }
-    function renderFiles() {
-        const files = JSON.parse(localStorage.getItem('nyc_files')) || [];
-        document.getElementById('file-list').innerHTML = files.map((f, i) => `
-            <div class="note-row">
-                <a href="${f.data}" target="_blank" style="color:var(--accent); text-decoration:none;">📄 ${f.name}</a>
-                <button onclick="delFile(${i})" style="color:red; border:none; background:none;">✖</button>
-            </div>
-        `).join('');
-    }
-    function delFile(i) {
-        let files = JSON.parse(localStorage.getItem('nyc_files'));
-        files.splice(i, 1);
-        localStorage.setItem('nyc_files', JSON.stringify(files));
-        renderFiles
