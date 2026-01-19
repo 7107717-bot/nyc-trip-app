@@ -2,40 +2,102 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NYC Master App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NYC Trip 2026</title>
     <style>
-        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f9; }
-        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); margin: 0; direction: rtl; padding-bottom: 50px; }
-        .app-bar { background: var(--primary); color: white; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 100; }
-        .nearby-btn { background: #27ae60; color: white; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; margin-top: 10px; cursor: pointer; text-decoration: none; display: inline-block; font-size: 0.9em; }
+        body { font-family: -apple-system, sans-serif; background: #f0f2f5; margin: 0; padding: 10px; direction: rtl; }
+        .app-bar { background: #2c3e50; color: white; text-align: center; padding: 15px; border-radius: 10px; margin-bottom: 15px; }
+        .nearby-btn { background: #27ae60; color: white; display: block; text-align: center; padding: 12px; border-radius: 25px; text-decoration: none; font-weight: bold; margin-bottom: 20px; }
         
-        .container { padding: 12px; }
-        .day-card { background: white; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); overflow: hidden; border: 1px solid #e1e8ed; }
-        .day-header { background: var(--accent); color: white; padding: 12px 15px; font-weight: bold; display: flex; justify-content: space-between; }
+        .day-card { background: white; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; }
+        .day-title { background: #3498db; color: white; padding: 10px; font-weight: bold; font-size: 1.1em; }
         
-        .row { border-bottom: 1px solid #f0f0f0; display: flex; align-items: stretch; }
-        .label { width: 85px; background: #f9fbff; padding: 12px 8px; font-size: 0.75em; font-weight: bold; color: #7f8c8d; border-left: 1px solid #f0f0f0; display: flex; align-items: center; }
-        .data { flex: 1; padding: 12px; font-size: 0.95em; line-height: 1.5; outline: none; min-height: 20px; }
-        .data:focus { background: #fffde7; }
+        .table { width: 100%; border-collapse: collapse; }
+        .row { border-bottom: 1px solid #eee; display: flex; }
+        .row:last-child { border-bottom: none; }
+        .cell-label { width: 85px; background: #f8f9fa; padding: 10px; font-size: 0.8em; font-weight: bold; color: #7f8c8d; border-left: 1px solid #eee; }
+        .cell-content { flex: 1; padding: 10px; font-size: 0.95em; line-height: 1.4; outline: none; }
         
-        .map-link { color: #007aff; text-decoration: none; font-weight: bold; border-bottom: 1px solid #007aff; margin-left: 5px; }
-        .hint { font-size: 0.75em; color: #7f8c8d; text-align: center; padding: 10px; }
+        .map-link { color: #007aff; text-decoration: none; font-weight: bold; }
+        .edit-hint { text-align: center; font-size: 0.8em; color: gray; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
 <div class="app-bar">
-    <h2 style="margin:0;">NYC 2026 Smart App 🗽</h2>
-    <a href="https://www.google.com/maps/search/attractions+near+me" class="nearby-btn">📍 מה בסביבה שלי?</a>
+    <h2 style="margin:0;">ניו יורק 2026 🗽</h2>
 </div>
 
-<div class="container">
-    <p class="hint">ניתן לערוך כל שדה בנגיעה. לצורך ניווט, לחצי על שם האתר.</p>
+<a href="https://www.google.com/maps/search/attractions+near+me" class="nearby-btn">📍 מה בסביבה שלי? (מפות)</a>
 
-    <div class="day-card">
-        <div class="day-header"><span>יום 1 | 27-Sep (א)</span><span>Midtown</span></div>
+<p class="edit-hint">ניתן לערוך כל משבצת בנגיעה (השינוי זמני בדפדפן)</p>
+
+<div class="day-card">
+    <div class="day-title">יום 1 | 27.9 (א) | Flatiron + Midtown</div>
+    <div class="table">
         <div class="row">
-            <div class="label">📍 אתרים</div>
-            <div class="data" contenteditable="true">
-                <a href="
+            <div class="cell-label">📍 אתרים</div>
+            <div class="cell-content" contenteditable="true">
+                <a href="https://maps.google.com/?q=Madison+Square+Park" class="map-link">Madison Sq Park</a>, Flatiron, Gramercy, <a href="https://maps.google.com/?q=Times+Square" class="map-link">Times Square</a>, Grand Central
+            </div>
+        </div>
+        <div class="row"><div class="cell-label">🛍️ קניות</div><div class="cell-content" contenteditable="true">Marshalls (6th Ave), TJ Maxx (33rd), Le Labo Madison</div></div>
+        <div class="row"><div class="cell-label">☕ אוכל</div><div class="cell-content" contenteditable="true">Eataly, Rosetta Bakery, Shake Shack</div></div>
+        <div class="row"><div class="cell-label">🍹 רופטופ</div><div class="cell-content" contenteditable="true">230 Fifth, Refinery, The Skylark</div></div>
+        <div class="row"><div class="cell-label">⚓ מזחים</div><div class="cell-content" contenteditable="true">Pier 54, Pier 62</div></div>
+    </div>
+</div>
+
+<div class="day-card">
+    <div class="day-title">יום 3 | 29.9 (ג) | Chelsea + Hudson Yards</div>
+    <div class="table">
+        <div class="row">
+            <div class="cell-label">📍 אתרים</div>
+            <div class="cell-content" contenteditable="true">
+                <a href="https://maps.google.com/?q=Chelsea+Market" class="map-link">Chelsea Market</a>, High Line, <a href="https://maps.google.com/?q=The+Vessel" class="map-link">Vessel</a>, <a href="https://maps.google.com/?q=Edge+NYC" class="map-link">EDGE</a>
+            </div>
+        </div>
+        <div class="row"><div class="cell-label">☕ אוכל</div><div class="cell-content" contenteditable="true">Black Seed Bagels, Magnolia, Starbucks Roastery</div></div>
+        <div class="row"><div class="cell-label">⚓ מזחים</div><div class="cell-content" contenteditable="true">Pier 57, Pier 55 (Little Island)</div></div>
+    </div>
+</div>
+
+<div class="day-card">
+    <div class="day-title">יום 5 | 1.10 (ה) | Brooklyn</div>
+    <div class="table">
+        <div class="row">
+            <div class="cell-label">📍 אתרים</div>
+            <div class="cell-content" contenteditable="true"><a href="https://maps.google.com/?q=770+Eastern+Parkway" class="map-link">770 חב"ד</a>, Washington St, Brooklyn Bridge Park</div>
+        </div>
+        <div class="row"><div class="cell-label">☕ אוכל</div><div class="cell-content" contenteditable="true">Time Out Market, Black Seed Dumbo</div></div>
+        <div class="row"><div class="cell-label">⚓ מזחים</div><div class="cell-content" contenteditable="true">Pier 1 Dumbo, Pier 17</div></div>
+    </div>
+</div>
+
+<div class="day-card">
+    <div class="day-title">יום 8 | 4.10 (א) | Washington DC</div>
+    <div class="table">
+        <div class="row">
+            <div class="cell-label">📍 אתרים</div>
+            <div class="cell-content" contenteditable="true">הבית הלבן, <a href="https://maps.google.com/?q=Air+and+Space+Museum" class="map-link">מוזיאון החלל</a>, Capitol</div>
+        </div>
+        <div class="row"><div class="cell-label">🚶 רחובות</div><div class="cell-content" contenteditable="true">M Street Georgetown</div></div>
+    </div>
+</div>
+
+<div class="day-card">
+    <div class="day-title">יום 10 | 6.10 (ג) | Downtown</div>
+    <div class="table">
+        <div class="row">
+            <div class="cell-label">📍 אתרים</div>
+            <div class="cell-content" contenteditable="true">Wall St, 9/11 Memorial, <a href="https://maps.google.com/?q=Statue+of+Liberty+Ferry" class="map-link">מעבורת פסל החירות</a></div>
+        </div>
+        <div class="row"><div class="cell-label">🛍️ קניות</div><div class="cell-content" contenteditable="true">Century 21, Le Labo Downtown</div></div>
+        <div class="row"><div class="cell-label">⚓ מזחים</div><div class="cell-content" contenteditable="true">Pier 15, Pier 17</div></div>
+    </div>
+</div>
+
+<div style="text-align:center; padding:20px; color:gray;">סוף המסלול</div>
+
+</body>
+</html>
