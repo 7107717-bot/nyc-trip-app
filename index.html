@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NY Trip Planner</title>
+
+<link rel="manifest" href="data:application/json,{
+  &quot;name&quot;:&quot;NY Trip Planner&quot;,
+  &quot;short_name&quot;:&quot;NY Trip&quot;,
+  &quot;display&quot;:&quot;standalone&quot;,
+  &quot;start_url&quot;:&quot;.&quot;
+}">
+
+<style>
+body {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  margin: 0;
+  background: #f5f5f5;
+  direction: rtl;
+}
+header {
+  background: #111;
+  color: #fff;
+  padding: 12px;
+  text-align: center;
+  font-size: 18px;
+}
+nav {
+  display: flex;
+  overflow-x: auto;
+  background: #fff;
+  border-bottom: 1px solid #ccc;
+}
+nav button {
+  flex: none;
+  padding: 10px 14px;
+  border: none;
+  background: none;
+  font-size: 14px;
+}
+nav button.active {
+  border-bottom: 3px solid #111;
+  font-weight: bold;
+}
+.section {
+  padding: 12px;
+}
+.card {
+  background: #fff;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 10px;
+}
+.card h3 {
+  margin: 0 0 6px 0;
+  font-size: 15px;
+}
+.item {
+  display: flex;
+  align-items: center;
+  margin: 4px 0;
+}
+.item input {
+  margin-left: 8px;
+}
+.actions {
+  display: flex;
+  gap: 8px;
+  margin: 10px 0;
+}
+.actions button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #111;
+  color: #fff;
+  font-size: 14px;
+}
+input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  margin-top: 6px;
+}
+</style>
+</head>
+
+<body>
+
+<header>New York Trip Planner</header>
+
+<nav id="daysNav"></nav>
+
+<div class="section" id="content"></div>
+
+<script>
+const days = [
+ {
+  date:"27 Sep",
+  title:"Flatiron + Midtown",
+  sites:["Madison Sq Park","Flatiron Building","Times Square","Grand Central"],
+  food:["Eataly Flatiron","Shake Shack","Rosetta Bakery"],
+  rooftops:["230 Fifth","Refinery Rooftop","The Skylark"]
+ },
+ {
+  date:"29 Sep",
+  title:"Chelsea + Hudson Yards",
+  sites:["Chelsea Market","High Line","EDGE Hudson Yards"],
+  food:["Magnolia Bakery","Playa Bowls 7th Ave"],
+  rooftops:["Gallow Green","230 Fifth"]
+ },
+ {
+  date:"30 Sep",
+  title:"SoHo + Nolita",
+  sites:["Little Italy","Elizabeth]()
