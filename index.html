@@ -3,76 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NYC Trip 2026 - המדריך המלא</title>
+    <title>NYC Trip 2026 - Master Table</title>
     <style>
-        body { font-family: -apple-system, system-ui, sans-serif; background: #f0f2f5; margin: 0; padding: 10px; direction: rtl; color: #1c1e21; }
-        .header { background: linear-gradient(135deg, #2c3e50, #34495e); color: white; text-align: center; padding: 25px 15px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-        .day-card { background: white; border-radius: 15px; padding: 20px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-right: 8px solid #3498db; }
-        .day-title { color: #2c3e50; font-size: 1.3em; font-weight: bold; border-bottom: 2px solid #f0f2f5; padding-bottom: 10px; margin-bottom: 15px; display: flex; justify-content: space-between; }
-        .section { margin-bottom: 12px; padding: 8px; border-radius: 8px; }
-        .sights-bg { background: #e8f4fd; }
-        .food-bg { background: #fef9e7; }
-        .shop-bg { background: #f4ecf7; }
-        .label { font-weight: bold; color: #555; font-size: 0.9em; display: block; margin-bottom: 3px; }
-        .content { font-size: 1.05em; line-height: 1.5; }
-        .map-link { color: #3498db; text-decoration: none; font-weight: bold; border-bottom: 1px dashed #3498db; }
-        .pier-tag { background: #27ae60; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.8em; font-weight: bold; }
+        body { font-family: -apple-system, sans-serif; background: #eaeff2; margin: 0; padding: 10px; direction: rtl; }
+        .app-header { background: #2c3e50; color: white; text-align: center; padding: 20px; border-radius: 15px; margin-bottom: 15px; }
+        
+        /* עיצוב כרטיס יום כטבלה */
+        .day-container { background: white; border-radius: 12px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: 1px solid #d1d8dd; }
+        .day-header { background: #3498db; color: white; padding: 12px; font-weight: bold; font-size: 1.1em; display: flex; justify-content: space-between; }
+        
+        .grid-row { display: flex; border-bottom: 1px solid #edf2f7; align-items: stretch; }
+        .grid-row:last-child { border-bottom: none; }
+        
+        .col-label { width: 85px; background: #f8fafc; color: #64748b; font-weight: bold; font-size: 0.85em; padding: 10px; border-left: 1px solid #edf2f7; display: flex; align-items: center; }
+        .col-content { flex: 1; padding: 10px; font-size: 0.95em; color: #1e293b; line-height: 1.4; }
+        
+        .map-btn { color: #2563eb; text-decoration: none; font-weight: 600; border-bottom: 1px solid #bfdbfe; }
+        .pier-badge { background: #dcfce7; color: #166534; padding: 2px 6px; border-radius: 4px; font-size: 0.8em; font-weight: bold; margin-left: 4px; }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <h1 style="margin:0;">ניו יורק 2026 🗽</h1>
-    <p style="margin:10px 0 0 0;">כל המסלול, האוכל והמזחים בדף אחד</p>
+<div class="app-header">
+    <h2 style="margin:0;">לו"ז ניו יורק 2026 🗽</h2>
 </div>
 
-<div class="day-card">
-    <div class="day-title"><span>יום 1 | 27.09</span> 🏙️</div>
-    <div class="section sights-bg">
-        <span class="label">📍 אתרים וניווט:</span>
-        <div class="content">
-            <a href="https://www.google.com/maps/search/Madison+Square+Park" class="map-link">Madison Sq Park</a>, 
-            <a href="https://www.google.com/maps/search/Flatiron+Building" class="map-link">בניין הפלאטאיירון</a>, 
-            Gramercy Park (סיבוב חיצוני), 
-            <a href="https://www.google.com/maps/search/Times+Square" class="map-link">Times Square</a>, 
-            <a href="https://www.google.com/maps/search/Grand+Central+Terminal" class="map-link">Grand Central</a>
+<div class="day-container">
+    <div class="day-header"><span>יום 1 | 27.09</span><span>ראשון</span></div>
+    <div class="grid-row">
+        <div class="col-label">📍 אתרים</div>
+        <div class="col-content">
+            <a href="https://www.google.com/maps/search/Madison+Square+Park+NY" class="map-btn">Madison Sq Park</a>, 
+            <a href="https://www.google.com/maps/search/Flatiron+Building+NY" class="map-btn">Flatiron</a>, 
+            Gramercy (חיצוני), 
+            <a href="https://www.google.com/maps/search/Times+Square+NY" class="map-btn">Times Square</a>, 
+            <a href="https://www.google.com/maps/search/Grand+Central+Terminal+NY" class="map-btn">Grand Central</a>
         </div>
     </div>
-    <div class="section food-bg">
-        <span class="label">☕ אוכל:</span>
-        <div class="content">Eataly (שוק איטלקי), Rosetta Bakery, Shake Shack</div>
+    <div class="grid-row">
+        <div class="col-label">🛍️ קניות</div>
+        <div class="col-content">Marshalls (6th Ave), TJ Maxx (33rd)</div>
     </div>
-    <div class="section shop-bg">
-        <span class="label">🛍️ קניות:</span>
-        <div class="content">Marshalls (6th Ave), TJ Maxx (33rd St)</div>
+    <div class="grid-row">
+        <div class="col-label">☕ אוכל</div>
+        <div class="col-content"><b>Eataly</b>, Rosetta Bakery, Shake Shack</div>
     </div>
 </div>
 
-<div class="day-card">
-    <div class="day-title"><span>יום 3 | 29.09</span> 🌊</div>
-    <div class="section sights-bg">
-        <span class="label">📍 אתרים ומזחים מרכזיים:</span>
-        <div class="content">
-            <a href="https://www.google.com/maps/search/Chelsea+Market" class="map-link">Chelsea Market</a>, 
-            טיילת ה-High Line, 
-            <a href="https://www.google.com/maps/search/Vessel+Hudson+Yards" class="map-link">Vessel</a>, 
-            תצפית ה-EDGE, 
-            <span class="pier-tag">Pier 55</span> <a href="https://www.google.com/maps/search/Little+Island" class="map-link">Little Island</a>, 
-            <span class="pier-tag">Pier 57</span> <a href="https://www.google.com/maps/search/Market+57" class="map-link">Market 57 (קומת גג ותצפית)</a>
+<div class="day-container">
+    <div class="day-header"><span>יום 3 | 29.09</span><span>שלישי</span></div>
+    <div class="grid-row">
+        <div class="col-label">📍 אתרים</div>
+        <div class="col-content">
+            <a href="https://www.google.com/maps/search/Chelsea+Market+NY" class="map-btn">Chelsea Market</a>, High Line, 
+            <a href="https://www.google.com/maps/search/Vessel+Hudson+Yards" class="map-btn">Vessel</a>, 
+            <a href="https://www.google.com/maps/search/Edge+Observation+Deck" class="map-btn">EDGE</a>, 
+            <span class="pier-badge">Pier 55</span> <a href="https://www.google.com/maps/search/Little+Island+NY" class="map-btn">Little Island</a>,
+            <span class="pier-badge">Pier 57</span> <a href="https://www.google.com/maps/search/Market+57+Hudson+River+Park" class="map-btn">Market 57</a>
         </div>
     </div>
-    <div class="section food-bg">
-        <span class="label">☕ אוכל:</span>
-        <div class="content">Magnolia Bakery (בצ'לסי מרקט), Starbucks Roastery</div>
+    <div class="grid-row">
+        <div class="col-label">☕ אוכל</div>
+        <div class="col-content"><b>Starbucks Roastery</b>, Magnolia Bakery</div>
     </div>
-    <div class="section shop-bg">
-        <span class="label">🛍️ קניות:</span>
-        <div class="content">קניון Hudson Yards</div>
+    <div class="grid-row">
+        <div class="col-label">🛍️ קניות</div>
+        <div class="col-content">קניון Hudson Yards</div>
     </div>
 </div>
 
-<div class="day-card">
-    <div class="day-title"><span>יום 5 | 01.10</span> 🌉</div>
-    <div class="section sights-bg">
-        <span class="label">📍 אתרים מרכזיים:</span>
-        <div class="content
+<div class="day-container">
+    <div class="day-header"><span>יום 5 | 01.10</span><span>חמישי</span></div>
+    <div class="grid-row">
+        <div class="col-label">📍 אתרים</div>
+        <div class="col-content">
+            <a href="https://www.google.com/maps/search/770+Eastern+Parkway+Brooklyn" class="map-btn">770 (חב"ד)</a>, 
+            <a href="https://www.google.com/maps/search/Washington+St+Brooklyn" class="map-btn">Washington St</a>, 
+            Dumbo Park, 
+            <span class="pier-badge">Pier 17</span> <a href="https://www.google.com/maps/search/Time+Out+Market+NY" class="map-btn">Time Out Market</a>
+        </div>
+    </div>
+    <div class="grid-row">
