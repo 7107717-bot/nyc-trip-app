@@ -3,47 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NYC Smart App 2026</title>
+    <title>NYC Master App</title>
     <style>
-        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f9; --text: #2d3436; --save: #27ae60; }
-        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); margin: 0; direction: rtl; color: var(--text); padding-bottom: 40px; }
-        
-        .app-bar { background: var(--primary); color: white; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
-        .nearby-btn { background: var(--save); color: white; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; margin-top: 10px; font-size: 0.9em; box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: pointer; }
+        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f9; }
+        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); margin: 0; direction: rtl; padding-bottom: 50px; }
+        .app-bar { background: var(--primary); color: white; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 100; }
+        .nearby-btn { background: #27ae60; color: white; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; margin-top: 10px; cursor: pointer; text-decoration: none; display: inline-block; font-size: 0.9em; }
         
         .container { padding: 12px; }
-        .day-card { background: white; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow: hidden; border: 1px solid #e1e8ed; }
-        .day-header { background: var(--accent); color: white; padding: 12px 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+        .day-card { background: white; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); overflow: hidden; border: 1px solid #e1e8ed; }
+        .day-header { background: var(--accent); color: white; padding: 12px 15px; font-weight: bold; display: flex; justify-content: space-between; }
         
         .row { border-bottom: 1px solid #f0f0f0; display: flex; align-items: stretch; }
-        .row:last-child { border-bottom: none; }
-        
         .label { width: 85px; background: #f9fbff; padding: 12px 8px; font-size: 0.75em; font-weight: bold; color: #7f8c8d; border-left: 1px solid #f0f0f0; display: flex; align-items: center; }
-        .data { flex: 1; padding: 12px; font-size: 0.95em; line-height: 1.5; outline: none; transition: background 0.2s; }
-        .data:focus { background: #fffde7; border-radius: 4px; }
+        .data { flex: 1; padding: 12px; font-size: 0.95em; line-height: 1.5; outline: none; min-height: 20px; }
+        .data:focus { background: #fffde7; }
         
-        .map-link { color: #007aff; text-decoration: none; font-weight: 600; }
-        .edit-hint { font-size: 0.7em; color: #bdc3c7; text-align: center; margin-bottom: 10px; }
+        .map-link { color: #007aff; text-decoration: none; font-weight: bold; border-bottom: 1px solid #007aff; margin-left: 5px; }
+        .hint { font-size: 0.75em; color: #7f8c8d; text-align: center; padding: 10px; }
     </style>
 </head>
 <body>
 
 <div class="app-bar">
-    <h2 style="margin:0; font-size: 1.2em;">ניו יורק 2026 - חכם 🗽</h2>
-    <button class="nearby-btn" onclick="findNearby()">📍 מה בסביבה שלי?</button>
+    <h2 style="margin:0;">NYC 2026 Smart App 🗽</h2>
+    <a href="https://www.google.com/maps/search/attractions+near+me" class="nearby-btn">📍 מה בסביבה שלי?</a>
 </div>
 
 <div class="container">
-    <div class="edit-hint">💡 ניתן לערוך כל שדה בנגיעה - השינוי נשמר אוטומטית</div>
-    <div id="app-content"></div>
-</div>
+    <p class="hint">ניתן לערוך כל שדה בנגיעה. לצורך ניווט, לחצי על שם האתר.</p>
 
-<script>
-    // המידע הראשוני מהטבלה שלך
-    const initialData = [
-        { d: "1", date: "27-Sep", dayName: "א", area: "Flatiron + Midtown", sights: "Madison Sq Park, Flatiron, Gramercy חיצוני, Times Square, Grand Central", shop: "Marshalls (620 6th Ave), TJ Maxx (18 W 33rd), Le Labo Madison", food: "Eataly, Rosetta Bakery, Shake Shack, Hard Rock Café", roofs: "230 Fifth, Refinery, The Skylark, PHD Terrace", piers: "Pier 54, Pier 62", streets: "Broadway, Park Ave South, 5th Ave" },
-        { d: "2", date: "28-Sep", dayName: "ב", area: "Woodbury Outlets", sights: "Woodbury Outlets", shop: "יום קניות מלא - אאוטלט", food: "Food Court", roofs: "בקרבת המלון", piers: "-", streets: "-" },
-        { d: "3", date: "29-Sep", dayName: "ג", area: "Chelsea + Hudson Yards", sights: "Chelsea Market, High Line, Vessel, EDGE, Little Island", shop: "Marshalls (400 W 33rd), Le Labo Hudson Yards", food: "Black Seed Bagels, Magnolia Bakery, Starbucks Roastery", roofs: "Gallow Green, Press Lounge", piers: "Pier 57, Pier 55", streets: "9th Ave, 10th Ave, 14th St" },
-        { d: "4", date: "30-Sep", dayName: "ד", area: "SoHo + Nolita + LES", sights: "Little Italy, Chinatown, Elizabeth Street Garden", shop: "Nordstrom Rack (486 Broadway), Marshalls (478 Broadway), TJ Maxx SoHo", food: "Katz’s Deli, Russ & Daughters, La Cabra", roofs: "PHD Terrace SoHo", piers: "Pier 17, Pier 15, Pier 35", streets: "Prince St, Spring St, Mulberry St" },
-        { d: "5", date: "1-Oct", dayName: "ה", area: "Brooklyn: DUMBO", sights: "770 Eastern Pkwy, Washington St, Brooklyn Bridge Park", shop: "Dumbo Boutiques", food: "Black Seed Bagels, Time Out Market", roofs: "Westlight (Williamsburg)", piers: "Pier 1 DUMBO, Pier 6", streets: "Washington St, Water St" },
-        { d: "6", date: "2-Oct", dayName: "ו", area: "Central Park + Uptown", sights: "The Mall, Bethesda, Bow Bridge, Lincoln Center, Roosevelt Island Tram", shop: "Marshalls (1991 Broadway), TJ Maxx (250 W 57th)", food: "Broadway Bagels", roofs: "The Roof
+    <div class="day-card">
+        <div class="day-header"><span>יום 1 | 27-Sep (א)</span><span>Midtown</span></div>
+        <div class="row">
+            <div class="label">📍 אתרים</div>
+            <div class="data" contenteditable="true">
+                <a href="
