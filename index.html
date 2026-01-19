@@ -2,32 +2,50 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NYC Trip 2026</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NYC Trip 2026 - Final</title>
     <style>
-        body { font-family: -apple-system, sans-serif; background: #f4f7f6; margin: 0; padding-bottom: 80px; direction: rtl; }
-        .tab-nav { position: sticky; top: 0; background: #2c3e50; display: flex; z-index: 1000; padding: 5px; }
-        .tab-btn { flex: 1; padding: 12px; border: none; background: none; color: white; font-weight: bold; font-size: 15px; opacity: 0.6; }
-        .tab-btn.active { opacity: 1; border-bottom: 3px solid #3498db; }
-        
-        .content { padding: 15px; display: none; }
-        .content.active { display: block; }
-
-        .day-card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-right: 5px solid #3498db; }
-        .day-title { font-weight: bold; color: #2c3e50; font-size: 1.1em; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 10px; }
-        
-        .label { font-weight: bold; color: #7f8c8d; font-size: 0.85em; display: block; margin-top: 8px; }
-        .text { display: block; color: #333; line-height: 1.4; padding: 4px 0; }
-        .nav-link { color: #3498db; text-decoration: none; font-weight: 500; }
-        
-        .file-box { border: 2px dashed #ccc; padding: 20px; text-align: center; border-radius: 10px; background: white; }
-        .note-item { background: white; padding: 12px; margin-bottom: 8px; border-radius: 8px; display: flex; justify-content: space-between; }
+        body { font-family: -apple-system, sans-serif; background: #f4f7f6; margin: 0; padding: 10px; direction: rtl; }
+        .header { background: #2c3e50; color: white; text-align: center; padding: 15px; border-radius: 10px; margin-bottom: 15px; }
+        .day-card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-right: 6px solid #3498db; }
+        .day-title { font-weight: bold; color: #2c3e50; font-size: 1.2em; border-bottom: 2px solid #eee; padding-bottom: 5px; margin-bottom: 10px; }
+        .label { font-weight: bold; color: #7f8c8d; font-size: 0.9em; display: block; margin-top: 10px; }
+        .content { display: block; color: #333; line-height: 1.5; font-size: 1.05em; }
+        .nav-link { color: #3498db; text-decoration: none; font-weight: bold; }
+        .footer-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: white; display: flex; border-top: 1px solid #ddd; padding: 10px 0; justify-content: space-around; }
+        .footer-nav a { text-decoration: none; color: #2c3e50; font-weight: bold; font-size: 14px; }
     </style>
 </head>
 <body>
 
-<div class="tab-nav">
-    <button class="tab-btn active" onclick="openTab(event, 'itinerary')">🗺️ מסלול</button>
-    <button class="tab-btn" onclick="openTab(event, 'files')">📂 מסמכים</button>
-    <button class="tab-btn" onclick="openTab(event, 'notes')">📝 רשימות</button>
+<div class="header">
+    <h2 style="margin:0;">המסלול המלא לניו יורק 🗽</h2>
+    <p style="margin:5px 0 0 0; font-size: 0.9em;">ספטמבר - אוקטובר 2026</p>
 </div>
+
+<div class="day-card">
+    <div class="day-title">יום 1 | 27.9 | Flatiron + Midtown</div>
+    <span class="label">📍 אתרים מרכזיים:</span>
+    <span class="content">
+        <a class="nav-link" href="https://maps.google.com/?q=Madison+Square+Park">Madison Sq Park</a>, 
+        <a class="nav-link" href="https://maps.google.com/?q=Flatiron+Building">Flatiron</a>, 
+        Gramercy חיצוני, 
+        <a class="nav-link" href="https://maps.google.com/?q=Times+Square">Times Square</a>, 
+        <a class="nav-link" href="https://maps.google.com/?q=Grand+Central+Terminal">Grand Central</a>
+    </span>
+    <span class="label">🛍️ קניות:</span><span class="content">Marshalls (6th Ave), TJ Maxx (33rd)</span>
+    <span class="label">🚶 רחובות:</span><span class="content">Broadway, 5th Ave, Irving Place</span>
+    <span class="label">☕ אוכל:</span><span class="content">Eataly, Rosetta Bakery</span>
+</div>
+
+<div class="day-card">
+    <div class="day-title">יום 2 | 28.9 | Woodbury Outlets</div>
+    <span class="label">📍 יעד:</span><span class="content"><a class="nav-link" href="https://maps.google.com/?q=Woodbury+Common+Premium+Outlets">Woodbury Common Outlets</a></span>
+    <span class="label">🛍️ קניות:</span><span class="content">יום קניות מלא - להביא מזוודה ריקה!</span>
+</div>
+
+<div class="day-card">
+    <div class="day-title">יום 3 | 29.9 | Chelsea + Hudson Yards</div>
+    <span class="label">📍 אתרים ומזחים:</span>
+    <span class="content">
+        <a class="nav-link" href="https://maps.google.com/?q=Chelsea+Market">Chelsea
