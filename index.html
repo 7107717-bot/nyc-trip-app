@@ -3,82 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NYC Full Trip 2026</title>
+    <title>NYC 2026 App</title>
     <style>
-        body { font-family: -apple-system, sans-serif; background: #f0f2f5; margin: 0; padding: 10px; direction: rtl; }
-        .app-bar { background: #2c3e50; color: white; text-align: center; padding: 15px; border-radius: 10px; margin-bottom: 15px; }
-        .nearby-btn { background: #27ae60; color: white; display: block; text-align: center; padding: 12px; border-radius: 25px; text-decoration: none; font-weight: bold; margin-bottom: 15px; }
-        .day-card { background: white; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; }
-        .day-title { background: #3498db; color: white; padding: 10px; font-weight: bold; font-size: 1.1em; }
-        .row { border-bottom: 1px solid #eee; display: flex; }
-        .label { width: 85px; background: #f8f9fa; padding: 10px; font-size: 0.75em; font-weight: bold; color: #7f8c8d; border-left: 1px solid #eee; flex-shrink: 0; }
-        .content { flex: 1; padding: 10px; font-size: 0.9em; line-height: 1.4; outline: none; }
+        body { font-family: -apple-system, sans-serif; background: #f4f7f6; margin: 0; padding: 10px; direction: rtl; }
+        .header { background: #2c3e50; color: white; text-align: center; padding: 10px; border-radius: 10px; position: sticky; top: 0; z-index: 10; }
+        .nav-btn { background: #27ae60; color: white; display: block; text-align: center; padding: 10px; border-radius: 20px; text-decoration: none; margin: 10px 0; font-weight: bold; }
+        .day, .notes-section { background: white; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); overflow: hidden; border: 1px solid #ddd; }
+        .day-h, .notes-h { background: #3498db; color: white; padding: 8px 12px; font-weight: bold; }
+        .notes-h { background: #9b59b6; }
+        .row { display: flex; border-bottom: 1px solid #eee; }
+        .lbl { width: 80px; background: #f9f9f9; padding: 8px; font-size: 0.8em; font-weight: bold; color: #666; border-left: 1px solid #eee; flex-shrink: 0; }
+        .txt { flex: 1; padding: 8px; font-size: 0.9em; outline: none; min-height: 20px; }
         .map { color: #007aff; text-decoration: none; font-weight: bold; }
+        .checklist-item { padding: 10px; border-bottom: 1px solid #eee; display: flex; align-items: center; }
+        .checklist-item input { margin-left: 10px; transform: scale(1.2); }
     </style>
 </head>
 <body>
 
-<div class="app-bar"><h2>ניו יורק 2026 🗽</h2></div>
-<a href="https://www.google.com/maps/search/attractions+near+me" class="nearby-btn">📍 מה בסביבה שלי?</a>
+<div class="header"><h3>NYC Master 🗽</h3></div>
+<a href="https://www.google.com/maps/search/attractions+near+me" class="nav-btn">📍 מה בסביבה שלי?</a>
 
-<div class="day-card">
-    <div class="day-title">יום 1 | 27.9 | Flatiron + Midtown</div>
-    <div class="row"><div class="label">📍 אתרים</div><div class="content" contenteditable="true"><a href="https://maps.google.com/?q=Madison+Square+Park" class="map">Madison Sq Park</a>, Flatiron, Times Square</div></div>
-    <div class="row"><div class="label">🛍️ קניות</div><div class="content" contenteditable="true">Marshalls (6th Ave), TJ Maxx (33rd)</div></div>
-    <div class="row"><div class="label">☕ אוכל</div><div class="content" contenteditable="true">Eataly, Rosetta Bakery, Shake Shack</div></div>
-    <div class="row"><div class="label">⚓ מזחים</div><div class="content" contenteditable="true">Pier 54, Pier 62</div></div>
+<div class="day">
+    <div class="day-h">יום 1 | 27.9 | Flatiron</div>
+    <div class="row"><div class="lbl">📍 אתרים</div><div class="txt" contenteditable="true">Madison Sq Park, Flatiron, Times Sq</div></div>
+    <div class="row"><div class="lbl">🛍️ קניות</div><div class="txt" contenteditable="true">Marshalls, TJ Maxx, Le Labo</div></div>
 </div>
 
-<div class="day-card">
-    <div class="day-title">יום 2 | 28.9 | Woodbury Outlets</div>
-    <div class="row"><div class="label">📍 יעד</div><div class="content" contenteditable="true"><a href="https://maps.google.com/?q=Woodbury+Common+Premium+Outlets" class="map">Woodbury Outlets</a> - יום קניות מלא</div></div>
-</div>
-
-<div class="day-card">
-    <div class="day-title">יום 3 | 29.9 | Chelsea + Hudson Yards</div>
-    <div class="row"><div class="label">📍 אתרים</div><div class="content" contenteditable="true"><a href="https://maps.google.com/?q=Chelsea+Market" class="map">Chelsea Market</a>, High Line, Vessel, <a href="https://maps.google.com/?q=Edge+NYC" class="map">EDGE</a></div></div>
-    <div class="row"><div class="label">☕ אוכל</div><div class="content" contenteditable="true">Black Seed Bagels, Magnolia Bakery</div></div>
-    <div class="row"><div class="label">⚓ מזחים</div><div class="content" contenteditable="true">Pier 57, Pier 55 (Little Island)</div></div>
-</div>
-
-<div class="day-card">
-    <div class="day-title">יום 4 | 30.9 | SoHo + Nolita + LES</div>
-    <div class="row"><div class="label">📍 אתרים</div><div class="content" contenteditable="true">Little Italy, Chinatown, Elizabeth St Garden</div></div>
-    <div class="row"><div class="label">🛍️ קניות</div><div class="content" contenteditable="true">Nordstrom Rack, Marshalls SoHo, Le Labo</div></div>
-    <div class="row"><div class="label">☕ אוכל</div><div class="content" contenteditable="true">Katz’s Deli, La Cabra קפה</div></div>
-    <div class="row"><div class="label">⚓ מזחים</div><div class="content" contenteditable="true">Pier 17, Pier 15</div></div>
-</div>
-
-<div class="day-card">
-    <div class="day-title">יום 5 | 1.10 | Brooklyn: DUMBO</div>
-    <div class="row"><div class="label">📍 אתרים</div><div class="content" contenteditable="true"><a href="https://maps.google.com/?q=770+Eastern+Parkway" class="map">770 חב"ד</a>, Washington St, Brooklyn Bridge Park</div></div>
-    <div class="row"><div class="label">☕ אוכל</div><div class="content" contenteditable="true">Black Seed Dumbo, Time Out Market</div></div>
-    <div class="row"><div class="label">⚓ מזחים</div><div class="content" contenteditable="true">Pier 1, Pier 6</div></div>
-</div>
-
-<div class="day-card">
-    <div class="day-title">יום 6 | 2.10 | Central Park + Uptown</div>
-    <div class="row"><div class="label">📍 אתרים</div><div class="content" contenteditable="true">Bethesda, <a href="https://maps.google.com/?q=Roosevelt+Island+Tram" class="map">רכבל רוזוולט</a>, Four Freedoms Park</div></div>
-    <div class="row"><div class="label">🛍️ קניות</div><div class="content" contenteditable="true">Marshalls (1991 Broadway)</div></div>
-</div>
-
-<div class="day-card">
-    <div class="day-title">יום 7 | 3.10 | Williamsburg</div>
-    <div class="row"><div class="label">📍 אתרים</div><div class="content" contenteditable="true">גשר ברוקלין, Williamsburg, Domino Park</div></div>
-    <div class="row"><div class="label">☕ אוכל</div><div class="content" contenteditable="true">Smorgasburg (שבת), Tompkins Sq Bagels</div></div>
-</div>
-
-<div class="day-card">
-    <div class="day-title">יום 8 | 4.10 | Washington DC</div>
-    <div class="row"><div class="label">📍 אתרים</div><div class="content" contenteditable="true">הבית הלבן, <a href="https://maps.google.com/?q=Air+and+Space+Museum+DC" class="map">מוזיאון החלל</a>, Capitol</div></div>
-    <div class="row"><div class="label">🚶 רחובות</div><div class="content" contenteditable="true">M Street Georgetown</div></div>
-</div>
-
-<div class="day-card">
-    <div class="day-title">יום 9 | 5.10 | Jersey Gardens</div>
-    <div class="row"><div class="label">🛍️ יעד</div><div class="content" contenteditable="true">Jersey Gardens Outlet - יום קניות</div></div>
-</div>
-
-<div class="day-card">
-    <div class="day-title">יום 10 | 6.10 | Downtown</div>
-    <div class="row"><div class="label">📍 אתרים</div><div class="content" contenteditable="true">Wall St, 9/11 Memorial, <a href
+<div class="notes-section">
+    <div class="notes-h">📝 רשימת צ'ק-אין (אתרים)</div>
+    <div class="checklist-item"><input type="checkbox"> <span>Madison Sq Park (Day 1)</span></div>
+    <div class="checklist-item"><input type="checkbox"> <span>Times Square (Day 1)</span></div>
+    <div class="checklist-item"><input type="checkbox"> <span>Woodbury Outlets (Day 2)</span></div>
+    <div class="checklist-item"><input type="checkbox"> <span>Chelsea Market & High Line (Day 3)</span></div>
+    <div class="checklist-item
