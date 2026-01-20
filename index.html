@@ -3,29 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NYC Ultimate Planner</title>
+    <title>NYC Trip Master Pro</title>
     <style>
-        :root { --primary: #2c3e50; --accent: #e74c3c; --bg: #f4f7f6; --link: #3498db; --near: #9b59b6; --pier: #16a085; --food: #e67e22; }
+        :root { --primary: #2c3e50; --accent: #e74c3c; --bg: #f4f7f6; --link: #3498db; --near: #9b59b6; --pier: #16a085; --food: #e67e22; --rooftop: #f39c12; }
         body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); margin: 0; padding: 10px; padding-bottom: 110px; color: var(--primary); }
         .header { text-align: center; background: #fff; padding: 15px; border-radius: 20px; margin-bottom: 15px; border: 2px solid #eee; }
-        .day-card { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-right: 8px solid var(--link); }
+        .day-card { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-right: 8px solid var(--link); position: relative; }
         .day-title { font-weight: 800; font-size: 1.1em; color: var(--accent); margin-bottom: 10px; display: block; }
-        .editable { border-bottom: 1px dashed #ccc; padding: 2px; min-width: 20px; display: inline-block; cursor: text; }
+        .nav-link { color: var(--link); text-decoration: none; font-weight: 500; display: inline-block; margin: 2px 0; border-bottom: 1px solid transparent; }
+        .nav-link:after { content: ' 📍'; font-size: 0.7em; }
         .label { font-weight: bold; font-size: 0.8em; color: #95a5a6; display: block; margin-top: 10px; }
         .content { font-size: 1em; color: #34495e; line-height: 1.6; }
         
-        /* Checklist Style */
-        .checklist { margin-top: 15px; background: #f9f9f9; padding: 10px; border-radius: 12px; }
-        .todo-item { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; font-size: 0.9em; }
-        .todo-item input[type="checkbox"] { width: 18px; height: 18px; }
-        .add-todo { background: none; border: 1px solid #ddd; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; font-size: 12px; margin-top: 5px; }
+        /* Checklist */
+        .checklist { margin-top: 15px; background: #f9f9f9; padding: 10px; border-radius: 12px; border: 1px inset #eee; }
+        .todo-item { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+        .todo-text { font-size: 0.9em; flex-grow: 1; }
+        .done { text-decoration: line-through; color: #bdc3c7; }
+        .add-todo { background: var(--near); color: white; border: none; border-radius: 5px; padding: 2px 8px; cursor: pointer; font-size: 12px; margin-top: 5px; }
 
-        /* Bottom Nav */
+        /* Survival Bar */
         .survival-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 10px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 1000; border-top: 1px solid #eee; }
         .tool-btn { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #34495e; font-size: 0.65em; font-weight: bold; gap: 4px; border: none; background: none; }
         .tool-icon { font-size: 1.5em; }
         
         #file-section { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 2000; padding: 20px; box-sizing: border-box; overflow-y: auto; }
+        .edit-mode-btn { position: absolute; top: 10px; left: 10px; font-size: 0.7em; background: #eee; border: none; border-radius: 5px; padding: 5px; }
     </style>
 </head>
 <body>
@@ -33,98 +36,92 @@
 <div id="main-view">
     <div class="header">
         <h1 style="margin:0;">🗽 NYC TRIP MASTER</h1>
-        <p style="margin:5px 0 0; font-size:0.8em;">ניתן לערוך כל טקסט - הכל נשמר אוטומטית!</p>
+        <p style="margin:5px 0 0; font-size:0.8em;">ניווט פעיל + צ'ק-ליסט + קבצים</p>
     </div>
     <div id="app"></div>
 </div>
 
 <div id="file-section">
-    <button onclick="toggleFiles()" style="background:var(--accent); color:white; border:none; padding:10px; border-radius:10px;">⬅️ חזרה</button>
-    <h2>📁 מסמכים וקבצים</h2>
-    <input type="file" id="fileInput" multiple><br><br>
+    <button onclick="toggleFiles()" style="background:var(--accent); color:white; border:none; padding:10px; border-radius:10px; width:100%;">⬅️ חזרה למסלול</button>
+    <h2 style="text-align:center;">📁 ניירת דיגיטלית</h2>
+    <input type="file" id="fileInput" multiple style="width:100%; margin:20px 0;">
     <div id="fileList"></div>
 </div>
 
 <div class="survival-bar">
     <a href="https://citymapper.com/nyc" target="_blank" class="tool-btn"><span class="tool-icon">🚇</span><span>סאבוויי</span></a>
     <button onclick="toggleFiles()" class="tool-btn"><span class="tool-icon">📁</span><span>קבצים</span></button>
-    <button onclick="saveAll()" class="tool-btn"><span class="tool-icon">💾</span><span>שמור הכל</span></button>
     <a href="https://www.google.com/maps/search/${encodeURIComponent('Marshalls')}" target="_blank" class="tool-btn"><span class="tool-icon">🛍️</span><span>שופינג</span></a>
+    <a href="https://www.google.com/maps/search/${encodeURIComponent('public restroom')}" target="_blank" class="tool-btn"><span class="tool-icon">🚽</span><span>שירותים</span></a>
 </div>
 
 <script>
-    // נתונים ראשוניים
-    const defaultData = [
-        { day: 1, date: "27-Sep", area: "Flatiron", sights: "Times Square, Grand Central", food: "Eataly", rooftop: "230 Fifth", todos: [] },
-        { day: 4, date: "30-Sep", area: "SoHo + Nolita + LES", sights: "Little Italy, Chinatown, Elizabeth St Garden", food: "Katz’s Deli, Russ & Daughters", rooftop: "PHD SoHo", todos: [] },
-        { day: 8, date: "04-Oct", area: "Washington DC", sights: "National Mall, Lincoln Memorial, Capitol", food: "Tompkins Bagels", rooftop: "-", todos: [] },
-        { day: 10, date: "06-Oct", area: "Downtown", sights: "Wall Street, 9/11 Memorial, פסל החירות", food: "Manhatta", rooftop: "Overstory", todos: [] },
-        { day: 12, date: "08-Oct", area: "Midtown - טיסה", sights: "5th Ave, Broadway, Bryant Park", food: "Ess-a-Bagel", rooftop: "Refinery", todos: [] }
+    const data = [
+        { day: 1, date: "27-Sep", area: "Midtown", sights: ["Times Square", "Grand Central", "Bryant Park"], food: ["Rosetta Bakery", "Eataly"], rooftop: ["230 Fifth"], piers: ["Pier 54"] },
+        { day: 4, date: "30-Sep", area: "SoHo/LES", sights: ["Little Italy", "Chinatown", "Elizabeth St Garden"], food: ["Katz’s Deli", "Russ & Daughters"], rooftop: ["PHD SoHo"], piers: ["Pier 17", "Pier 35"] },
+        { day: 8, date: "04-Oct", area: "Washington DC", sights: ["National Mall", "Lincoln Memorial", "Capitol"], food: ["Union Station"], rooftop: [], piers: [] },
+        { day: 10, date: "06-Oct", area: "Downtown", sights: ["Wall Street", "9/11 Memorial", "One World", "Battery Park", "פסל החירות"], food: ["Manhatta"], rooftop: ["Overstory"], piers: ["Pier 15"] },
+        { day: 12, date: "08-Oct", area: "Midtown (Flight)", sights: ["5th Ave", "Broadway", "42nd St"], food: ["Ess-a-Bagel", "Playa Bowls"], rooftop: ["Refinery Rooftop"], piers: ["Pier 62"], shopping: ["Macy's 34th St"] }
     ];
 
-    // טעינה מהזיכרון או מהברירת מחדל
-    let tripData = JSON.parse(localStorage.getItem('nyc_trip_data')) || defaultData;
+    // טעינת צ'ק-ליסטים מהזיכרון
+    let userTodos = JSON.parse(localStorage.getItem('nyc_todos')) || {};
+
+    function getMapUrl(query) { return `https://www.google.com/maps/search/${encodeURIComponent(query + " New York")}`; }
 
     function renderApp() {
         const app = document.getElementById('app');
         app.innerHTML = '';
-        tripData.forEach((day, index) => {
+        data.forEach((day, dIdx) => {
             const card = document.createElement('div');
             card.className = 'day-card';
+            
+            const sightsHtml = day.sights.map(s => `<a class="nav-link" href="${getMapUrl(s)}">${s}</a>`).join(', ');
+            const foodHtml = day.food.map(f => `<a class="nav-link" style="color:var(--food)" href="${getMapUrl(f)}">${f}</a>`).join(', ');
+            const roofHtml = day.rooftop.map(r => `<a class="nav-link" style="color:var(--rooftop)" href="${getMapUrl(r)}">${r}</a>`).join(', ');
+            const pierHtml = day.piers.map(p => `<a class="nav-link" style="color:var(--pier)" href="${getMapUrl(p)}">${p}</a>`).join(', ');
+
             card.innerHTML = `
-                <span class="day-title">${day.date} | <span class="editable" oninput="updateData(${index}, 'area', this.innerText)" contenteditable="true">${day.area}</span></span>
-                
-                <span class="label">🏢 אתרים:</span>
-                <div class="editable content" oninput="updateData(${index}, 'sights', this.innerText)" contenteditable="true">${day.sights}</div>
-                
-                <span class="label" style="color:var(--food)">🍴 אוכל:</span>
-                <div class="editable content" oninput="updateData(${index}, 'food', this.innerText)" contenteditable="true">${day.food}</div>
-                
-                <span class="label" style="color:var(--rooftop)">🍸 רופטופ:</span>
-                <div class="editable content" oninput="updateData(${index}, 'rooftop', this.innerText)" contenteditable="true">${day.rooftop}</div>
+                <span class="day-title">${day.date} | ${day.area}</span>
+                <span class="label">🏢 אתרים:</span><div class="content">${sightsHtml}</div>
+                <span class="label" style="color:var(--pier)">⚓ מזחים:</span><div class="content">${pierHtml || 'אין'}</div>
+                <span class="label" style="color:var(--food)">🍴 אוכל:</span><div class="content">${foodHtml}</div>
+                <span class="label" style="color:var(--rooftop)">🍸 רופטופ:</span><div class="content">${roofHtml || 'מנוחה'}</div>
 
                 <div class="checklist">
-                    <span class="label">✅ רשימת צ'ק-ליסט:</span>
-                    <div id="todo-${index}">
-                        ${(day.todos || []).map((todo, tIdx) => `
+                    <span class="label">✅ צ'ק-ליסט ליום זה:</span>
+                    <div id="list-${dIdx}">
+                        ${(userTodos[dIdx] || []).map((t, tIdx) => `
                             <div class="todo-item">
-                                <input type="checkbox" ${todo.done ? 'checked' : ''} onclick="toggleTodo(${index}, ${tIdx})">
-                                <span class="editable" contenteditable="true" oninput="updateTodo(${index}, ${tIdx}, this.innerText)">${todo.text}</span>
+                                <input type="checkbox" ${t.done ? 'checked' : ''} onclick="toggleTodo(${dIdx}, ${tIdx})">
+                                <span class="todo-text ${t.done ? 'done' : ''}">${t.text}</span>
                             </div>
                         `).join('')}
                     </div>
-                    <button class="add-todo" onclick="addTodo(${index})">+</button>
+                    <button class="add-todo" onclick="addNewTodo(${dIdx})">+ הוסף משימה</button>
                 </div>
             `;
             app.appendChild(card);
         });
     }
 
-    function updateData(index, field, value) {
-        tripData[index][field] = value;
-        localStorage.setItem('nyc_trip_data', JSON.stringify(tripData));
+    function addNewTodo(dIdx) {
+        const txt = prompt("מה להוסיף לרשימה?");
+        if (txt) {
+            if (!userTodos[dIdx]) userTodos[dIdx] = [];
+            userTodos[dIdx].push({ text: txt, done: false });
+            saveAndRender();
+        }
     }
 
-    function addTodo(dayIdx) {
-        if (!tripData[dayIdx].todos) tripData[dayIdx].todos = [];
-        tripData[dayIdx].todos.push({ text: "משימה חדשה", done: false });
-        localStorage.setItem('nyc_trip_data', JSON.stringify(tripData));
+    function toggleTodo(dIdx, tIdx) {
+        userTodos[dIdx][tIdx].done = !userTodos[dIdx][tIdx].done;
+        saveAndRender();
+    }
+
+    function saveAndRender() {
+        localStorage.setItem('nyc_todos', JSON.stringify(userTodos));
         renderApp();
-    }
-
-    function toggleTodo(dayIdx, tIdx) {
-        tripData[dayIdx].todos[tIdx].done = !tripData[dayIdx].todos[tIdx].done;
-        localStorage.setItem('nyc_trip_data', JSON.stringify(tripData));
-    }
-
-    function updateTodo(dayIdx, tIdx, val) {
-        tripData[dayIdx].todos[tIdx].text = val;
-        localStorage.setItem('nyc_trip_data', JSON.stringify(tripData));
-    }
-
-    function saveAll() {
-        localStorage.setItem('nyc_trip_data', JSON.stringify(tripData));
-        alert("הכל נשמר בהצלחה בטלפון!");
     }
 
     function toggleFiles() {
@@ -142,24 +139,24 @@
             reader.onload = (ev) => {
                 savedFiles.push({ name: file.name, data: ev.target.result });
                 localStorage.setItem('nyc_files', JSON.stringify(savedFiles));
-                renderFiles();
+                renderFileList();
             };
             reader.readAsDataURL(file);
         });
     });
 
-    function renderFiles() {
+    function renderFileList() {
         const files = JSON.parse(localStorage.getItem('nyc_files') || '[]');
         document.getElementById('fileList').innerHTML = files.map((f, i) => `
-            <div style="margin:10px; padding:10px; border:1px solid #ddd; border-radius:10px; display:flex; justify-content:space-between;">
-                <span>${f.name}</span>
-                <a href="${f.data}" download="${f.name}">💾</a>
+            <div style="background:white; margin:10px 0; padding:15px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; border:1px solid #eee;">
+                <span style="font-size:0.8em; max-width:70%; overflow:hidden;">${f.name}</span>
+                <a href="${f.data}" download="${f.name}" style="text-decoration:none;">💾 הורד</a>
             </div>
         `).join('');
     }
 
     renderApp();
-    renderFiles();
+    renderFileList();
 </script>
 </body>
 </html>
