@@ -14,17 +14,14 @@
         .nav-link:after { content: ' 📍'; font-size: 0.7em; }
         .label { font-weight: bold; font-size: 0.8em; color: #95a5a6; display: block; margin-top: 10px; }
         .content { font-size: 1em; color: #34495e; line-height: 1.6; }
-        
         .checklist { margin-top: 15px; background: #f9f9f9; padding: 10px; border-radius: 12px; border: 1px inset #eee; }
         .todo-item { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
         .todo-text { font-size: 0.9em; flex-grow: 1; }
         .done { text-decoration: line-through; color: #bdc3c7; }
         .add-todo { background: var(--near); color: white; border: none; border-radius: 5px; padding: 2px 8px; cursor: pointer; font-size: 12px; margin-top: 5px; }
-
         .survival-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 10px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 1000; border-top: 1px solid #eee; }
         .tool-btn { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #34495e; font-size: 0.65em; font-weight: bold; gap: 4px; border: none; background: none; }
         .tool-icon { font-size: 1.5em; }
-        
         #file-section { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 2000; padding: 20px; box-sizing: border-box; overflow-y: auto; }
     </style>
 </head>
@@ -33,7 +30,7 @@
 <div id="main-view">
     <div class="header">
         <h1 style="margin:0;">🗽 NYC TRIP MASTER</h1>
-        <p style="margin:5px 0 0; font-size:0.8em;">הכל מעודכן: ניווט, קניות וקבצים</p>
+        <p style="margin:5px 0 0; font-size:0.8em;">המסלול המלא (12 ימים) + ניווט וקבצים</p>
     </div>
     <div id="app"></div>
 </div>
@@ -54,17 +51,21 @@
 
 <script>
     const data = [
-        { day: 1, date: "27-Sep", area: "Midtown", sights: ["Times Square", "Grand Central", "Bryant Park"], food: ["Rosetta Bakery", "Eataly"], rooftop: ["230 Fifth"], piers: ["Pier 54"], shopping: ["Marshalls 620 6th Ave", "TJ Maxx 620 6th Ave"] },
-        { day: 2, date: "28-Sep", area: "Woodbury Outlets", sights: ["Woodbury Outlets"], food: ["Food Court"], rooftop: [], piers: [], shopping: ["Woodbury Common Premium Outlets"] },
-        { day: 3, date: "29-Sep", area: "Chelsea", sights: ["High Line", "EDGE", "Vessel"], food: ["Black Seed Bagels", "Magnolia Bakery"], rooftop: ["Gallow Green"], piers: ["Pier 57", "Little Island"], shopping: ["Marshalls W 18th St"] },
-        { day: 4, date: "30-Sep", area: "SoHo/Nolita/LES", sights: ["SoHo", "Nolita", "LES", "Little Italy", "Chinatown", "Elizabeth St Garden"], food: ["Katz’s Deli", "Russ & Daughters"], rooftop: ["PHD SoHo"], piers: ["Pier 17", "Pier 35"], shopping: ["Nordstrom Rack 60 E 14th St", "TJ Maxx 483 Broadway"] },
-        { day: 8, date: "04-Oct", area: "Washington DC", sights: ["National Mall", "Lincoln Memorial", "WWII Memorial", "Washington Monument", "Capitol", "Union Station"], food: ["Union Station Cafe"], rooftop: [], piers: [], shopping: [] },
-        { day: 10, date: "06-Oct", area: "Downtown", sights: ["Wall Street", "Trinity Church", "9/11 Memorial", "One World", "Battery Park", "פסל החירות"], food: ["Manhatta"], rooftop: ["Overstory"], piers: ["Pier 15"], shopping: ["TJ Maxx 14 Wall St"] },
-        { day: 12, date: "08-Oct", area: "Midtown (Flight)", sights: ["5th Ave", "Broadway", "6th Ave", "42nd St", "Bryant Park"], food: ["Ess-a-Bagel", "Playa Bowls", "Magnolia Bakery"], rooftop: ["Refinery Rooftop", "St. Cloud", "Skylark"], piers: ["Pier 54", "Pier 62"], shopping: ["Macy's 151 W 34th St", "Le Labo Times Square"] }
+        { day: 1, date: "27-Sep", area: "Midtown / Flatiron", sights: ["Times Square", "Grand Central", "Bryant Park", "Flatiron"], food: ["Rosetta Bakery", "Eataly", "Shake Shack"], rooftop: ["230 Fifth", "The Skylark"], piers: ["Pier 54", "Pier 62"], shopping: ["Marshalls 620 6th Ave", "TJ Maxx 620 6th Ave"] },
+        { day: 2, date: "28-Sep", area: "Woodbury Outlets", sights: ["Woodbury Outlets"], food: ["Food Court"], rooftop: ["מנוחה"], piers: [], shopping: ["Woodbury Common Premium Outlets"] },
+        { day: 3, date: "29-Sep", area: "Chelsea / Hudson Yards", sights: ["High Line", "EDGE", "Vessel", "Chelsea Market"], food: ["Black Seed Bagels", "Magnolia Bakery"], rooftop: ["Gallow Green"], piers: ["Pier 57", "Little Island"], shopping: ["Marshalls W 18th St"] },
+        { day: 4, date: "30-Sep", area: "SoHo / Nolita / LES", sights: ["SoHo", "Nolita", "LES", "Little Italy", "Chinatown", "Elizabeth St Garden"], food: ["Katz’s Deli", "Russ & Daughters"], rooftop: ["PHD SoHo"], piers: ["Pier 17", "Pier 15", "Pier 35"], shopping: ["Nordstrom Rack 60 E 14th St", "TJ Maxx 483 Broadway"] },
+        { day: 5, date: "01-Oct", area: "Brooklyn: Crown Heights", sights: ["770", "Brooklyn Bridge Park", "Washington St DUMBO"], food: ["Black Seed Bagels DUMBO"], rooftop: ["Westlight"], piers: ["Pier 1 DUMBO", "Pier 6"], shopping: ["DUMBO Shops"] },
+        { day: 6, date: "02-Oct", area: "Central Park / Uptown", sights: ["Central Park", "Roosevelt Island Cable Car"], food: ["Broadway Bagels"], rooftop: ["Refinery Rooftop"], piers: [], shopping: ["Marshalls 2182 Broadway", "TJ Maxx 250 W 57th St"] },
+        { day: 7, date: "03-Oct", area: "Brooklyn: Williamsburg", sights: ["Brooklyn Bridge", "Domino Park", "Williamsburg"], food: ["Smorgasburg"], rooftop: ["Westlight Rooftop"], piers: ["Ferry Terminal Williamsburg"], shopping: ["Bedford Ave Shops"] },
+        { day: 8, date: "04-Oct", area: "Washington DC", sights: ["National Mall", "Lincoln Memorial", "WWII Memorial", "Washington Monument", "Capitol", "Union Station"], food: ["Union Station Cafe"], rooftop: ["230 Fifth"], piers: [], shopping: [] },
+        { day: 9, date: "05-Oct", area: "Jersey Gardens", sights: ["Jersey Gardens Outlet"], food: ["Mall Food"], rooftop: ["מנוחה"], piers: [], shopping: ["Jersey Gardens Mall"] },
+        { day: 10, date: "06-Oct", area: "Downtown / Financial", sights: ["Wall Street", "Trinity Church", "9/11 Memorial", "One World", "Battery Park", "פסל החירות"], food: ["Manhatta", "Overstory"], rooftop: ["Overstory Bar"], piers: ["Pier 15", "Pier 17"], shopping: ["TJ Maxx 14 Wall St"] },
+        { day: 11, date: "07-Oct", area: "Union Sq / Village", sights: ["Washington Sq Park", "Friends Building", "Union Sq"], food: ["Bagel Pub", "Fellini Cafe"], rooftop: ["The Skylark"], piers: ["Pier 46", "Pier 51"], shopping: ["Marshalls 620 6th Ave"] },
+        { day: 12, date: "08-Oct", area: "Midtown (Flight)", sights: ["5th Ave", "Broadway", "6th Ave", "42nd St", "Bryant Park"], food: ["Ess-a-Bagel", "Playa Bowls", "Magnolia Bakery"], rooftop: ["Refinery Rooftop", "St. Cloud", "Skylark", "PHD Terrace"], piers: ["Pier 54", "Pier 62"], shopping: ["Macy's 151 W 34th St", "Le Labo Times Square"] }
     ];
 
     let userTodos = JSON.parse(localStorage.getItem('nyc_todos')) || {};
-
     function getMapUrl(query) { return `https://www.google.com/maps/search/${encodeURIComponent(query + " New York")}`; }
 
     function renderApp() {
@@ -73,7 +74,6 @@
         data.forEach((day, dIdx) => {
             const card = document.createElement('div');
             card.className = 'day-card';
-            
             const sightsHtml = day.sights.map(s => `<a class="nav-link" href="${getMapUrl(s)}">${s}</a>`).join(', ');
             const foodHtml = day.food.map(f => `<a class="nav-link" style="color:var(--food)" href="${getMapUrl(f)}">${f}</a>`).join(', ');
             const roofHtml = day.rooftop.map(r => `<a class="nav-link" style="color:var(--rooftop)" href="${getMapUrl(r)}">${r}</a>`).join(', ');
@@ -81,23 +81,15 @@
             const shopHtml = day.shopping.map(s => `<a class="nav-link" style="color:var(--shop)" href="${getMapUrl(s)}">${s}</a>`).join(', ');
 
             card.innerHTML = `
-                <span class="day-title">${day.date} | ${day.area}</span>
+                <span class="day-title">${day.date} | יום ${dIdx + 1}: ${day.area}</span>
                 <span class="label">🏢 אתרים ורחובות:</span><div class="content">${sightsHtml}</div>
                 <span class="label" style="color:var(--shop)">🛍️ קניות באזור:</span><div class="content">${shopHtml || 'אין'}</div>
                 <span class="label" style="color:var(--food)">🍴 אוכל:</span><div class="content">${foodHtml}</div>
                 <span class="label" style="color:var(--rooftop)">🍸 רופטופ:</span><div class="content">${roofHtml || 'מנוחה'}</div>
                 <span class="label" style="color:var(--pier)">⚓ מזחים:</span><div class="content">${pierHtml || 'אין'}</div>
-
                 <div class="checklist">
                     <span class="label">✅ משימות ליום זה:</span>
-                    <div id="list-${dIdx}">
-                        ${(userTodos[dIdx] || []).map((t, tIdx) => `
-                            <div class="todo-item">
-                                <input type="checkbox" ${t.done ? 'checked' : ''} onclick="toggleTodo(${dIdx}, ${tIdx})">
-                                <span class="todo-text ${t.done ? 'done' : ''}">${t.text}</span>
-                            </div>
-                        `).join('')}
-                    </div>
+                    <div id="list-${dIdx}">${(userTodos[dIdx] || []).map((t, tIdx) => `<div class="todo-item"><input type="checkbox" ${t.done ? 'checked' : ''} onclick="toggleTodo(${dIdx}, ${tIdx})"><span class="todo-text ${t.done ? 'done' : ''}">${t.text}</span></div>`).join('')}</div>
                     <button class="add-todo" onclick="addNewTodo(${dIdx})">+ הוסף משימה</button>
                 </div>
             `;
@@ -105,41 +97,18 @@
         });
     }
 
-    function addNewTodo(dIdx) {
-        const txt = prompt("מה להוסיף לרשימה?");
-        if (txt) {
-            if (!userTodos[dIdx]) userTodos[dIdx] = [];
-            userTodos[dIdx].push({ text: txt, done: false });
-            saveAndRender();
-        }
-    }
-
-    function toggleTodo(dIdx, tIdx) {
-        userTodos[dIdx][tIdx].done = !userTodos[dIdx][tIdx].done;
-        saveAndRender();
-    }
-
-    function saveAndRender() {
-        localStorage.setItem('nyc_todos', JSON.stringify(userTodos));
-        renderApp();
-    }
-
-    function toggleFiles() {
-        const fs = document.getElementById('file-section');
-        fs.style.display = fs.style.display === 'block' ? 'none' : 'block';
-    }
-
+    function addNewTodo(dIdx) { const txt = prompt("מה להוסיף לרשימה?"); if (txt) { if (!userTodos[dIdx]) userTodos[dIdx] = []; userTodos[dIdx].push({ text: txt, done: false }); saveAndRender(); } }
+    function toggleTodo(dIdx, tIdx) { userTodos[dIdx][tIdx].done = !userTodos[dIdx][tIdx].done; saveAndRender(); }
+    function saveAndRender() { localStorage.setItem('nyc_todos', JSON.stringify(userTodos)); renderApp(); }
+    function toggleFiles() { const fs = document.getElementById('file-section'); fs.style.display = fs.style.display === 'block' ? 'none' : 'block'; }
+    
     const fileInput = document.getElementById('fileInput');
     fileInput.addEventListener('change', (e) => {
         const files = Array.from(e.target.files);
         let savedFiles = JSON.parse(localStorage.getItem('nyc_files') || '[]');
         files.forEach(file => {
             const reader = new FileReader();
-            reader.onload = (ev) => {
-                savedFiles.push({ name: file.name, data: ev.target.result });
-                localStorage.setItem('nyc_files', JSON.stringify(savedFiles));
-                renderFileList();
-            };
+            reader.onload = (ev) => { savedFiles.push({ name: file.name, data: ev.target.result }); localStorage.setItem('nyc_files', JSON.stringify(savedFiles)); renderFileList(); };
             reader.readAsDataURL(file);
         });
     });
