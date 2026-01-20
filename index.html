@@ -3,87 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NYC Trip 2026</title>
+    <title>NYC Trip App</title>
     <style>
-        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f2f5f8; }
-        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); margin: 0; direction: rtl; padding-bottom: 50px; }
-        .app-bar { background: var(--primary); color: white; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 1000; }
-        .nav-tabs { display: flex; background: white; border-bottom: 1px solid #ddd; position: sticky; top: 54px; z-index: 999; }
-        .tab-btn { flex: 1; padding: 12px; border: none; background: none; font-weight: bold; color: #7f8c8d; border-bottom: 3px solid transparent; }
-        .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
-        .content { padding: 12px; }
-        .card { background: white; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); overflow: hidden; }
-        .card-header { background: var(--accent); color: white; padding: 10px 15px; font-weight: bold; display: flex; justify-content: space-between; }
-        .info-row { display: flex; border-bottom: 1px solid #f0f0f0; }
-        .info-label { width: 85px; background: #f9f9f9; padding: 10px; font-size: 0.75em; font-weight: bold; color: #666; border-left: 1px solid #f0f0f0; }
-        .info-content { flex: 1; padding: 10px; font-size: 0.9em; outline: none; }
-        .btn-maps { background: #27ae60; color: white; display: block; text-align: center; padding: 12px; border-radius: 25px; text-decoration: none; font-weight: bold; margin: 10px 0; }
-        .hidden { display: none; }
-        .check-item { display: flex; align-items: center; padding: 10px; border-bottom: 1px solid #eee; }
-        .check-item input { margin-left: 10px; width: 18px; height: 18px; }
+        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; }
+        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); margin: 0; padding: 15px; padding-bottom: 80px; }
+        .header { text-align: center; background: white; padding: 20px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .day-card { background: white; border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-right: 6px solid var(--accent); }
+        .day-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 8px; margin-bottom: 10px; }
+        .day-title { font-weight: bold; font-size: 1.1em; color: var(--primary); }
+        .area-tag { font-size: 0.8em; background: #e1f5fe; color: #0288d1; padding: 3px 8px; border-radius: 10px; }
+        .category { margin: 8px 0; }
+        .label { font-weight: bold; color: #7f8c8d; font-size: 0.9em; display: block; }
+        .content { font-size: 1em; color: #34495e; outline: none; min-height: 1.2em; display: block; }
     </style>
 </head>
 <body>
 
-<div class="app-bar">NYC Master 2026 🗽</div>
-
-<div class="nav-tabs">
-    <button class="tab-btn active" onclick="openTab('days')">🗓️ מסלול</button>
-    <button class="tab-btn" onclick="openTab('extras')">🔍 פירוט</button>
-    <button class="tab-btn" onclick="openTab('lists')">✅ רשימות</button>
+<div class="header">
+    <h1 style="margin:0;">NYC TRIP 🍎</h1>
+    <p style="margin:5px 0 0; color:#7f8c8d; font-size:0.9em;">המסלול המלא שלך</p>
 </div>
 
-<div id="days" class="content">
-    <a href="https://www.google.com/maps/search/attractions+near+me" class="btn-maps">📍 מה בסביבה שלי?</a>
-    <div id="itinerary-list"></div>
-</div>
-
-<div id="extras" class="content hidden">
-    <div class="card">
-        <div class="card-header">🚆 וושינגטון (04.10)</div>
-        <div class="info-content" style="font-size: 0.85em;">
-            07:00 - רכבת Amtrak מ-Penn Station<br>
-            10:30 - הגעה ל-Union Station<br>
-            10:45 - קפיטול<br>
-            12:30 - מוזיאון החלל (כניסה חינם)<br>
-            14:30 - הבית הלבן<br>
-            16:00 - ג'ורג'טאון (M Street)
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-header">🛍️ וודברי - חנויות מפתח</div>
-        <div class="info-content" style="font-size: 0.8em; line-height: 1.2;">
-            <b>Hamptons:</b> Adidas, Skims, Lululemon<br>
-            <b>Adirondacks:</b> Prada, Balenciaga, Dior<br>
-            <b>Hudson Valley:</b> Gucci, Burberry, Coach
-        </div>
-    </div>
-</div>
-
-<div id="lists" class="content hidden">
-    <div class="card">
-        <div class="card-header">🛍️ קניות שחובה לבדוק</div>
-        <div class="check-item"><input type="checkbox"> <span>ספורה - קונסילר נגד כהויות</span></div>
-        <div class="check-item"><input type="checkbox"> <span>יוניקלו</span></div>
-        <div class="check-item"><input type="checkbox"> <span>Le Labo (לבדוק ריח ייחודי ל-NYC)</span></div>
-    </div>
-    <div class="card">
-        <div class="card-header">📓 פתקים חופשיים</div>
-        <div class="info-content" contenteditable="true" id="user-notes" onblur="saveNotes()" style="min-height: 150px;">
-            הקישי כאן כדי להוסיף הערות...
-        </div>
-    </div>
-</div>
+<div id="app"></div>
 
 <script>
-    const nycData = [
-        { d: "1", date: "27.09", area: "Flatiron", sights: "Madison Sq Park, Times Sq, Grand Central", shop: "Marshalls, TJ Maxx", food: "Eataly, Shake Shack" },
-        { d: "2", date: "28.09", area: "Woodbury", sights: "יום קניות מלא", shop: "אאוטלט וודברי", food: "Market Hall" },
-        { d: "3", date: "29.09", area: "Chelsea", sights: "Vessel, High Line, EDGE, Chelsea Market", shop: "Le Labo Chelsea", food: "Starbucks Roastery, Magnolia" },
-        { d: "4", date: "30.09", area: "SoHo", sights: "Little Italy, Chinatown", shop: "Nordstrom Rack, SoHo Shops", food: "Katz’s Deli" },
-        { d: "5", date: "01.10", area: "Brooklyn", sights: "770 חב\"ד, Washington St, DUMBO", shop: "Dumbo Boutiques", food: "Time Out Market" },
-        { d: "6", date: "02.10", area: "Central Park", sights: "Bethesda, Roosevelt Island Tram", shop: "Marshalls 1991 Bway", food: "Broadway Bagels" },
-        { d: "7", date: "03.10", area: "Williamsburg", sights: "Domino Park, Williamsburg", shop: "Local Shops", food: "Smorgasburg" },
-        { d: "8", date: "04.10", area: "Washington", sights: "קפיטול, הבית הלבן, מוזיאון החלל", shop: "-", food: "Georgetown" },
-        { d: "9", date: "05.10", area: "Jersey Gardens", sights: "Jersey Gardens Outlet", shop: "יום קניות", food: "Food Court" },
-        { d: "10", date: "06.
+    const tripData = [
+        { day: 1, date: "27-Sep", area: "Flatiron + Midtown", sights: "Madison Sq Park, Flatiron, Times Sq, Grand Central", shopping: "Marshalls, TJ Maxx, Le Labo", food: "Rosetta Bakery, Eataly", rooftop: "230 Fifth, Skylark" },
+        { day: 2, date: "28-Sep", area: "מחוץ לעיר", sights: "Woodbury Outlets", shopping: "יום קניות מלא", food: "-", rooftop: "-" },
+        { day: 3, date: "29-Sep", area: "Chelsea + Hudson Yards", sights: "Chelsea Market, High Line, EDGE, Vessel", shopping: "Marshalls, Le Labo", food: "Black Seed Bagels, Magnolia", rooftop: "Gallow Green" },
+        { day: 4, date: "30-Sep", area: "SoHo + Nolita + LES", sights: "Little Italy, Chinatown, Elizabeth Street Garden", shopping: "Nordstrom Rack, Marshalls, TJ Maxx", food: "Katz’s, Russ & Daughters", rooftop: "PHD SoHo" },
+        { day: 5, date: "01-Oct", area: "Brooklyn: DUMBO", sights: "770 Eastern Pkwy, Brooklyn Bridge Park, Washington St", shopping: "בוטיקים בדאמבו", food: "Black Seed DUMBO", rooftop: "Westlight" },
+        { day: 6, date: "02-Oct", area: "Central Park + Uptown", sights: "סנטרל פארק, Roosevelt Island, רכבל", shopping: "Marshalls, TJ Maxx", food: "Broadway Bagels", rooftop: "Refinery" },
+        { day: 7, date: "03-Oct", area: "Brooklyn: Williamsburg", sights: "Brooklyn Bridge, Domino Park, Williamsburg", shopping: "ויליאמסבורג", food: "Smorgasburg", rooftop: "Westlight" },
+        { day: 8, date: "04-Oct", area: "Washington DC", sights: "אופציה - וושינגטון", shopping: "-", food: "בתי קפה קלים", rooftop: "-" },
+        { day: 9, date: "05-Oct", area: "Jersey Gardens", sights: "Jersey Gardens Outlet", shopping: "יום קניות", food: "-", rooftop: "-" },
+        { day: 10, date: "06-Oct", area: "Downtown", sights: "Wall St, One World, 9/11, פסל החירות", shopping: "Marshalls, Le Labo", food: "Manhatta", rooftop: "Overstory" },
+        { day: 11, date: "07-Oct", area: "Greenwich Village", sights: "Union Sq, Washington Sq, Friends Building", shopping: "Marshalls", food: "Bagel Pub, Fellini Cafe", rooftop: "230 Fifth" },
+        { day: 12, date: "08-Oct", area: "Midtown - טיסה", sights: "Bryant Park", shopping: "Macy’s", food: "Ess-a-Bagel", rooftop: "-" }
+    ];
+
+    function render() {
+        const app = document.getElementById('app');
+        tripData.forEach((day) => {
+            const card = document.createElement('div');
+            card.className = 'day-card';
+            card.innerHTML = `
+                <div class="day-header">
+                    <span class="day-title">יום ${day.day} | ${day.date}</span>
+                    <span class="area-tag">${day.area}</span>
+                </div>
+                <div class="category">
+                    <span class="label">📍 אתרים:</span>
+                    <span class="content">${day.sights}</span>
+                </div>
+                <div class="category">
+                    <span class="label">🛍️ קניות:</span>
+                    <span class="content">${day.shopping}</span>
+                </div>
+                <div class="category">
+                    <span class="label">☕ אוכל:</span>
+                    <span class="content">${day.food}</span>
+                </div>
+                <div class="category">
+                    <span class="label">🍸 רופטופ:</span>
+                    <span class="content">${day.rooftop}</span>
+                </div>
+            `;
+            app.appendChild(card);
+        });
+    }
+    render();
+</script>
+</body>
+</html>
