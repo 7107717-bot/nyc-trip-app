@@ -3,75 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NYC Trip App</title>
+    <title>NYC Trip Master</title>
     <style>
-        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; }
-        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); margin: 0; padding: 15px; padding-bottom: 80px; }
-        .header { text-align: center; background: white; padding: 20px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .day-card { background: white; border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-right: 6px solid var(--accent); }
-        .day-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 8px; margin-bottom: 10px; }
-        .day-title { font-weight: bold; font-size: 1.1em; color: var(--primary); }
-        .area-tag { font-size: 0.8em; background: #e1f5fe; color: #0288d1; padding: 3px 8px; border-radius: 10px; }
-        .category { margin: 8px 0; }
-        .label { font-weight: bold; color: #7f8c8d; font-size: 0.9em; display: block; }
-        .content { font-size: 1em; color: #34495e; outline: none; min-height: 1.2em; display: block; }
+        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f0f2f5; --success: #27ae60; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); margin: 0; padding: 10px; padding-bottom: 50px; }
+        .header { text-align: center; background: white; padding: 15px; border-radius: 20px; margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 2px solid #ddd; }
+        .day-card { background: white; border-radius: 18px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); position: relative; border-right: 8px solid var(--accent); transition: 0.3s; }
+        .day-card.completed { border-right-color: var(--success); opacity: 0.8; }
+        .day-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; margin-bottom: 10px; }
+        .day-title { font-weight: 800; font-size: 1.2em; color: var(--primary); }
+        .category { margin: 10px 0; padding: 5px 0; }
+        .label { font-weight: bold; font-size: 0.85em; color: #7f8c8d; display: flex; align-items: center; gap: 5px; }
+        .content { font-size: 1em; color: #34495e; outline: none; display: block; min-height: 1.2em; padding: 4px; border-radius: 5px; }
+        .content:focus { background: #fffde7; border: 1px dashed #ccc; }
+        .checkbox { width: 25px; height: 25px; border: 2px solid var(--accent); border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .checkbox.checked { background: var(--success); border-color: var(--success); color: white; }
+        .checkbox.checked::after { content: '✓'; font-weight: bold; }
+        .notes-area { background: #fdfae6; border-radius: 10px; padding: 10px; margin-top: 10px; font-size: 0.9em; border: 1px solid #eee; }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <h1 style="margin:0;">NYC TRIP 🍎</h1>
-    <p style="margin:5px 0 0; color:#7f8c8d; font-size:0.9em;">המסלול המלא שלך</p>
+    <h1 style="margin:0; font-size: 1.5em;">NYC TRIP 2026 🍎</h1>
+    <small>לחצי על כל שורה לעריכה • השינויים נשמרים בטלפון</small>
 </div>
 
 <div id="app"></div>
 
 <script>
-    const tripData = [
-        { day: 1, date: "27-Sep", area: "Flatiron + Midtown", sights: "Madison Sq Park, Flatiron, Times Sq, Grand Central", shopping: "Marshalls, TJ Maxx, Le Labo", food: "Rosetta Bakery, Eataly", rooftop: "230 Fifth, Skylark" },
-        { day: 2, date: "28-Sep", area: "מחוץ לעיר", sights: "Woodbury Outlets", shopping: "יום קניות מלא", food: "-", rooftop: "-" },
-        { day: 3, date: "29-Sep", area: "Chelsea + Hudson Yards", sights: "Chelsea Market, High Line, EDGE, Vessel", shopping: "Marshalls, Le Labo", food: "Black Seed Bagels, Magnolia", rooftop: "Gallow Green" },
-        { day: 4, date: "30-Sep", area: "SoHo + Nolita + LES", sights: "Little Italy, Chinatown, Elizabeth Street Garden", shopping: "Nordstrom Rack, Marshalls, TJ Maxx", food: "Katz’s, Russ & Daughters", rooftop: "PHD SoHo" },
-        { day: 5, date: "01-Oct", area: "Brooklyn: DUMBO", sights: "770 Eastern Pkwy, Brooklyn Bridge Park, Washington St", shopping: "בוטיקים בדאמבו", food: "Black Seed DUMBO", rooftop: "Westlight" },
-        { day: 6, date: "02-Oct", area: "Central Park + Uptown", sights: "סנטרל פארק, Roosevelt Island, רכבל", shopping: "Marshalls, TJ Maxx", food: "Broadway Bagels", rooftop: "Refinery" },
-        { day: 7, date: "03-Oct", area: "Brooklyn: Williamsburg", sights: "Brooklyn Bridge, Domino Park, Williamsburg", shopping: "ויליאמסבורג", food: "Smorgasburg", rooftop: "Westlight" },
-        { day: 8, date: "04-Oct", area: "Washington DC", sights: "אופציה - וושינגטון", shopping: "-", food: "בתי קפה קלים", rooftop: "-" },
-        { day: 9, date: "05-Oct", area: "Jersey Gardens", sights: "Jersey Gardens Outlet", shopping: "יום קניות", food: "-", rooftop: "-" },
-        { day: 10, date: "06-Oct", area: "Downtown", sights: "Wall St, One World, 9/11, פסל החירות", shopping: "Marshalls, Le Labo", food: "Manhatta", rooftop: "Overstory" },
-        { day: 11, date: "07-Oct", area: "Greenwich Village", sights: "Union Sq, Washington Sq, Friends Building", shopping: "Marshalls", food: "Bagel Pub, Fellini Cafe", rooftop: "230 Fifth" },
-        { day: 12, date: "08-Oct", area: "Midtown - טיסה", sights: "Bryant Park", shopping: "Macy’s", food: "Ess-a-Bagel", rooftop: "-" }
+    const defaultData = [
+        { day: 1, date: "27-Sep", area: "Flatiron + Midtown", sights: "Madison Sq Park, Flatiron, Times Sq, Grand Central", shopping: "Marshalls, TJ Maxx, Le Labo", food: "Rosetta Bakery, Eataly", rooftop: "230 Fifth, Skylark", piers: "Pier 54, Pier 62", streets: "Broadway, 5th Ave", notes: "", completed: false },
+        { day: 2, date: "28-Sep", area: "Woodbury Outlets", sights: "יום קניות מלא", shopping: "Woodbury Outlets", food: "-", rooftop: "-", piers: "-", streets: "-", notes: "", completed: false },
+        { day: 3, date: "29-Sep", area: "Chelsea + Hudson Yards", sights: "Chelsea Market, High Line, EDGE, Vessel", shopping: "Marshalls, Le Labo", food: "Black Seed Bagels, Magnolia", rooftop: "Gallow Green", piers: "Pier 57, Pier 55 (Little Island)", streets: "9th Ave, 14th St", notes: "", completed: false },
+        { day: 4, date: "30-Sep", area: "SoHo + Nolita + LES", sights: "Little Italy, Chinatown, Elizabeth Street Garden", shopping: "Nordstrom Rack, Marshalls, TJ Maxx", food: "Katz’s, Russ & Daughters", rooftop: "PHD SoHo", piers: "Pier 17, Pier 15, Pier 35", streets: "Prince, Spring, Mulberry", notes: "", completed: false },
+        { day: 5, date: "01-Oct", area: "Brooklyn: Crown Heights", sights: "770 Eastern Pkwy, Brooklyn Bridge Park", shopping: "בוטיקים בדאמבו", food: "Black Seed Bagels DUMBO", rooftop: "Westlight", piers: "Pier 1 DUMBO, Pier 6", streets: "Washington St, Water St", notes: "", completed: false },
+        { day: 6, date: "02-Oct", area: "Central Park + Uptown", sights: "סנטרל פארק, Roosevelt Island, רכבל", shopping: "Marshalls, TJ Maxx", food: "Broadway Bagels", rooftop: "Refinery", piers: "-", streets: "Columbus, Madison", notes: "", completed: false },
+        { day: 7, date: "03-Oct", area: "Brooklyn: Williamsburg", sights: "Brooklyn Bridge, Domino Park", shopping: "ויליאמסבורג", food: "Smorgasburg", rooftop: "Westlight", piers: "Ferry Terminal", streets: "Kent Ave, Bedford Ave", notes: "", completed: false },
+        { day: 8, date: "04-Oct", area: "Washington DC", sights: "יום טיול מחוץ לעיר", shopping: "-", food: "-", rooftop: "-", piers: "-", streets: "-", notes: "", completed: false },
+        { day: 9, date: "05-Oct", area: "Jersey Gardens", sights: "Jersey Gardens Outlet", shopping: "יום קניות מלא", food: "-", rooftop: "-", piers: "-", streets: "-", notes: "", completed: false },
+        { day: 10, date: "06-Oct", area: "Downtown / Financial", sights: "Wall St, One World, 9/11 Memorial", shopping: "Le Labo Downtown", food: "Manhatta", rooftop: "Overstory", piers: "Pier 15, Pier 17", streets: "Stone St, Wall St", notes: "", completed: false },
+        { day: 11, date: "07-Oct", area: "Union Sq + Village", sights: "Union Sq, Washington Sq Park, Friends Building", shopping: "Marshalls", food: "Bagel Pub, Fellini Cafe", rooftop: "230 Fifth", piers: "Pier 46, Pier 51", streets: "Bleecker, MacDougal", notes: "", completed: false },
+        { day: 12, date: "08-Oct", area: "Midtown - טיסה", sights: "Bryant Park", shopping: "Macy’s", food: "Ess-a-Bagel", rooftop: "-", piers: "-", streets: "42nd St", notes: "", completed: false }
     ];
+
+    let tripData = JSON.parse(localStorage.getItem('nyc_trip_v2')) || defaultData;
 
     function render() {
         const app = document.getElementById('app');
-        tripData.forEach((day) => {
+        app.innerHTML = '';
+        tripData.forEach((day, index) => {
             const card = document.createElement('div');
-            card.className = 'day-card';
+            card.className = `day-card ${day.completed ? 'completed' : ''}`;
             card.innerHTML = `
                 <div class="day-header">
-                    <span class="day-title">יום ${day.day} | ${day.date}</span>
-                    <span class="area-tag">${day.area}</span>
+                    <span class="day-title" contenteditable="true" onblur="update(${index}, 'date', this.innerText)">${day.date} | יום ${day.day}</span>
+                    <div class="checkbox ${day.completed ? 'checked' : ''}" onclick="toggleComplete(${index})"></div>
                 </div>
-                <div class="category">
-                    <span class="label">📍 אתרים:</span>
-                    <span class="content">${day.sights}</span>
-                </div>
-                <div class="category">
-                    <span class="label">🛍️ קניות:</span>
-                    <span class="content">${day.shopping}</span>
-                </div>
-                <div class="category">
-                    <span class="label">☕ אוכל:</span>
-                    <span class="content">${day.food}</span>
-                </div>
-                <div class="category">
-                    <span class="label">🍸 רופטופ:</span>
-                    <span class="content">${day.rooftop}</span>
+                
+                <div class="category"><span class="label">📍 אזור ואתרים:</span>
+                    <span class="content" contenteditable="true" onblur="update(${index}, 'sights', this.innerText)">${day.sights}</span></div>
+                
+                <div class="category"><span class="label">🛍️ קניות:</span>
+                    <span class="content" contenteditable="true" onblur="update(${index}, 'shopping', this.innerText)">${day.shopping}</span></div>
+                
+                <div class="category"><span class="label">☕ אוכל ורופטופ:</span>
+                    <span class="content" contenteditable="true" onblur="update(${index}, 'food', this.innerText)">${day.food} | ${day.rooftop}</span></div>
+                
+                <div class="category"><span class="label">⚓ מזחים ורחובות:</span>
+                    <span class="content" contenteditable="true" onblur="update(${index}, 'piers', this.innerText)">${day.piers} | ${day.streets}</span></div>
+                
+                <div class="notes-area">
+                    <span class="label">📝 הערות ולינקים לכרטיסים:</span>
+                    <span class="content" contenteditable="true" onblur="update(${index}, 'notes', this.innerText)">${day.notes || 'לחצי להוספת הערה...'}</span>
                 </div>
             `;
             app.appendChild(card);
         });
     }
+
+    function update(index, field, value) {
+        tripData[index][field] = value;
+        localStorage.setItem('nyc_trip_v2', JSON.stringify(tripData));
+    }
+
+    function toggleComplete(index) {
+        tripData[index].completed = !tripData[index].completed;
+        localStorage.setItem('nyc_trip_v2', JSON.stringify(tripData));
+        render();
+    }
+
     render();
 </script>
 </body>
