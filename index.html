@@ -1,3 +1,16 @@
+צודקת, קטגוריית הקניות אכן נשמטה בגרסה הקודמת. תיקנתי את הקוד כך שכל המרכיבים יעבדו יחד בצורה מושלמת:
+
+החזרתי את קטגוריית הקניות: כולל ניווט לכל הרשתות שהופיעו בטבלה המקורית שלך (Macy's, Marshalls, TJ Maxx, Nordstrom Rack וכו').
+
+ניווט מלא: כל האתרים, המסעדות, המזחים והחנויות הם קישורים לחיצים שפותחים ניווט בגוגל מפות.
+
+צ'ק-ליסט (To-Do): אפשרות להוסיף ולסמן משימות לכל יום (נשמר בטלפון).
+
+ניהול קבצים: כרטיסיית הניירת הדיגיטלית למטה עובדת.
+
+הקוד המלא והסופי (העתיקי ל-GitHub):
+HTML
+
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -5,30 +18,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>NYC Trip Master Pro</title>
     <style>
-        :root { --primary: #2c3e50; --accent: #e74c3c; --bg: #f4f7f6; --link: #3498db; --near: #9b59b6; --pier: #16a085; --food: #e67e22; --rooftop: #f39c12; }
+        :root { --primary: #2c3e50; --accent: #e74c3c; --bg: #f4f7f6; --link: #3498db; --near: #9b59b6; --pier: #16a085; --food: #e67e22; --rooftop: #f39c12; --shop: #27ae60; }
         body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); margin: 0; padding: 10px; padding-bottom: 110px; color: var(--primary); }
         .header { text-align: center; background: #fff; padding: 15px; border-radius: 20px; margin-bottom: 15px; border: 2px solid #eee; }
         .day-card { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-right: 8px solid var(--link); position: relative; }
         .day-title { font-weight: 800; font-size: 1.1em; color: var(--accent); margin-bottom: 10px; display: block; }
-        .nav-link { color: var(--link); text-decoration: none; font-weight: 500; display: inline-block; margin: 2px 0; border-bottom: 1px solid transparent; }
+        .nav-link { color: var(--link); text-decoration: none; font-weight: 500; display: inline-block; margin: 2px 0; }
         .nav-link:after { content: ' 📍'; font-size: 0.7em; }
         .label { font-weight: bold; font-size: 0.8em; color: #95a5a6; display: block; margin-top: 10px; }
         .content { font-size: 1em; color: #34495e; line-height: 1.6; }
         
-        /* Checklist */
         .checklist { margin-top: 15px; background: #f9f9f9; padding: 10px; border-radius: 12px; border: 1px inset #eee; }
         .todo-item { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
         .todo-text { font-size: 0.9em; flex-grow: 1; }
         .done { text-decoration: line-through; color: #bdc3c7; }
         .add-todo { background: var(--near); color: white; border: none; border-radius: 5px; padding: 2px 8px; cursor: pointer; font-size: 12px; margin-top: 5px; }
 
-        /* Survival Bar */
         .survival-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 10px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 1000; border-top: 1px solid #eee; }
         .tool-btn { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #34495e; font-size: 0.65em; font-weight: bold; gap: 4px; border: none; background: none; }
         .tool-icon { font-size: 1.5em; }
         
         #file-section { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 2000; padding: 20px; box-sizing: border-box; overflow-y: auto; }
-        .edit-mode-btn { position: absolute; top: 10px; left: 10px; font-size: 0.7em; background: #eee; border: none; border-radius: 5px; padding: 5px; }
     </style>
 </head>
 <body>
@@ -36,7 +46,7 @@
 <div id="main-view">
     <div class="header">
         <h1 style="margin:0;">🗽 NYC TRIP MASTER</h1>
-        <p style="margin:5px 0 0; font-size:0.8em;">ניווט פעיל + צ'ק-ליסט + קבצים</p>
+        <p style="margin:5px 0 0; font-size:0.8em;">הכל מעודכן: ניווט, קניות וקבצים</p>
     </div>
     <div id="app"></div>
 </div>
@@ -57,14 +67,15 @@
 
 <script>
     const data = [
-        { day: 1, date: "27-Sep", area: "Midtown", sights: ["Times Square", "Grand Central", "Bryant Park"], food: ["Rosetta Bakery", "Eataly"], rooftop: ["230 Fifth"], piers: ["Pier 54"] },
-        { day: 4, date: "30-Sep", area: "SoHo/LES", sights: ["Little Italy", "Chinatown", "Elizabeth St Garden"], food: ["Katz’s Deli", "Russ & Daughters"], rooftop: ["PHD SoHo"], piers: ["Pier 17", "Pier 35"] },
-        { day: 8, date: "04-Oct", area: "Washington DC", sights: ["National Mall", "Lincoln Memorial", "Capitol"], food: ["Union Station"], rooftop: [], piers: [] },
-        { day: 10, date: "06-Oct", area: "Downtown", sights: ["Wall Street", "9/11 Memorial", "One World", "Battery Park", "פסל החירות"], food: ["Manhatta"], rooftop: ["Overstory"], piers: ["Pier 15"] },
-        { day: 12, date: "08-Oct", area: "Midtown (Flight)", sights: ["5th Ave", "Broadway", "42nd St"], food: ["Ess-a-Bagel", "Playa Bowls"], rooftop: ["Refinery Rooftop"], piers: ["Pier 62"], shopping: ["Macy's 34th St"] }
+        { day: 1, date: "27-Sep", area: "Midtown", sights: ["Times Square", "Grand Central", "Bryant Park"], food: ["Rosetta Bakery", "Eataly"], rooftop: ["230 Fifth"], piers: ["Pier 54"], shopping: ["Marshalls 620 6th Ave", "TJ Maxx 620 6th Ave"] },
+        { day: 2, date: "28-Sep", area: "Woodbury Outlets", sights: ["Woodbury Outlets"], food: ["Food Court"], rooftop: [], piers: [], shopping: ["Woodbury Common Premium Outlets"] },
+        { day: 3, date: "29-Sep", area: "Chelsea", sights: ["High Line", "EDGE", "Vessel"], food: ["Black Seed Bagels", "Magnolia Bakery"], rooftop: ["Gallow Green"], piers: ["Pier 57", "Little Island"], shopping: ["Marshalls W 18th St"] },
+        { day: 4, date: "30-Sep", area: "SoHo/Nolita/LES", sights: ["SoHo", "Nolita", "LES", "Little Italy", "Chinatown", "Elizabeth St Garden"], food: ["Katz’s Deli", "Russ & Daughters"], rooftop: ["PHD SoHo"], piers: ["Pier 17", "Pier 35"], shopping: ["Nordstrom Rack 60 E 14th St", "TJ Maxx 483 Broadway"] },
+        { day: 8, date: "04-Oct", area: "Washington DC", sights: ["National Mall", "Lincoln Memorial", "WWII Memorial", "Washington Monument", "Capitol", "Union Station"], food: ["Union Station Cafe"], rooftop: [], piers: [], shopping: [] },
+        { day: 10, date: "06-Oct", area: "Downtown", sights: ["Wall Street", "Trinity Church", "9/11 Memorial", "One World", "Battery Park", "פסל החירות"], food: ["Manhatta"], rooftop: ["Overstory"], piers: ["Pier 15"], shopping: ["TJ Maxx 14 Wall St"] },
+        { day: 12, date: "08-Oct", area: "Midtown (Flight)", sights: ["5th Ave", "Broadway", "6th Ave", "42nd St", "Bryant Park"], food: ["Ess-a-Bagel", "Playa Bowls", "Magnolia Bakery"], rooftop: ["Refinery Rooftop", "St. Cloud", "Skylark"], piers: ["Pier 54", "Pier 62"], shopping: ["Macy's 151 W 34th St", "Le Labo Times Square"] }
     ];
 
-    // טעינת צ'ק-ליסטים מהזיכרון
     let userTodos = JSON.parse(localStorage.getItem('nyc_todos')) || {};
 
     function getMapUrl(query) { return `https://www.google.com/maps/search/${encodeURIComponent(query + " New York")}`; }
@@ -80,16 +91,18 @@
             const foodHtml = day.food.map(f => `<a class="nav-link" style="color:var(--food)" href="${getMapUrl(f)}">${f}</a>`).join(', ');
             const roofHtml = day.rooftop.map(r => `<a class="nav-link" style="color:var(--rooftop)" href="${getMapUrl(r)}">${r}</a>`).join(', ');
             const pierHtml = day.piers.map(p => `<a class="nav-link" style="color:var(--pier)" href="${getMapUrl(p)}">${p}</a>`).join(', ');
+            const shopHtml = day.shopping.map(s => `<a class="nav-link" style="color:var(--shop)" href="${getMapUrl(s)}">${s}</a>`).join(', ');
 
             card.innerHTML = `
                 <span class="day-title">${day.date} | ${day.area}</span>
-                <span class="label">🏢 אתרים:</span><div class="content">${sightsHtml}</div>
-                <span class="label" style="color:var(--pier)">⚓ מזחים:</span><div class="content">${pierHtml || 'אין'}</div>
+                <span class="label">🏢 אתרים ורחובות:</span><div class="content">${sightsHtml}</div>
+                <span class="label" style="color:var(--shop)">🛍️ קניות באזור:</span><div class="content">${shopHtml || 'אין'}</div>
                 <span class="label" style="color:var(--food)">🍴 אוכל:</span><div class="content">${foodHtml}</div>
                 <span class="label" style="color:var(--rooftop)">🍸 רופטופ:</span><div class="content">${roofHtml || 'מנוחה'}</div>
+                <span class="label" style="color:var(--pier)">⚓ מזחים:</span><div class="content">${pierHtml || 'אין'}</div>
 
                 <div class="checklist">
-                    <span class="label">✅ צ'ק-ליסט ליום זה:</span>
+                    <span class="label">✅ משימות ליום זה:</span>
                     <div id="list-${dIdx}">
                         ${(userTodos[dIdx] || []).map((t, tIdx) => `
                             <div class="todo-item">
@@ -129,7 +142,6 @@
         fs.style.display = fs.style.display === 'block' ? 'none' : 'block';
     }
 
-    // ניהול קבצים
     const fileInput = document.getElementById('fileInput');
     fileInput.addEventListener('change', (e) => {
         const files = Array.from(e.target.files);
@@ -150,7 +162,7 @@
         document.getElementById('fileList').innerHTML = files.map((f, i) => `
             <div style="background:white; margin:10px 0; padding:15px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; border:1px solid #eee;">
                 <span style="font-size:0.8em; max-width:70%; overflow:hidden;">${f.name}</span>
-                <a href="${f.data}" download="${f.name}" style="text-decoration:none;">💾 הורד</a>
+                <a href="${f.data}" download="${f.name}" style="text-decoration:none;">💾</a>
             </div>
         `).join('');
     }
