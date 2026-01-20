@@ -1,11 +1,24 @@
+צודקת לגמרי! בגרסאות האחרונות התמקדנו בתיקון העיצוב והקישורים, אז שמתי רק חלק מהימים כדי שהקוד לא יהיה ארוך מדי בזמן הבדיקות.
+
+הנה הקוד המלא והסופי בהחלט, שכולל את כל 12 הימים עם כל המזחים, הקניות, האתרים והכפתורים החדשים.
+
+מה לעשות עכשיו?
+היכנסי ל-GitHub לקובץ index.html.
+
+מחקי את כל מה שיש שם.
+
+הדביקי את הקוד המלא הזה:
+
+HTML
+
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NYC Pro Planner</title>
+    <title>NYC Pro Planner 2026</title>
     <style>
-        :root { --primary: #2c3e50; --accent: #e74c3c; --bg: #f4f7f6; --link: #3498db; --near: #9b59b6; --pier: #16a085; --tool: #2ecc71; }
+        :root { --primary: #2c3e50; --accent: #e74c3c; --bg: #f4f7f6; --link: #3498db; --near: #9b59b6; --pier: #16a085; }
         body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); margin: 0; padding: 10px; padding-bottom: 100px; color: var(--primary); }
         .header { text-align: center; background: #fff; padding: 15px; border-radius: 20px; margin-bottom: 15px; border: 2px solid #eee; }
         .day-card { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-right: 8px solid var(--link); }
@@ -16,8 +29,6 @@
         .near-btn { background: var(--near); color: white; border: none; padding: 10px; border-radius: 12px; font-size: 0.85em; text-decoration: none; display: flex; align-items: center; gap: 5px; margin-top: 15px; width: 100%; justify-content: center; font-weight: bold; }
         .label { font-weight: bold; font-size: 0.8em; color: #95a5a6; display: block; margin-top: 10px; }
         .content { font-size: 1em; color: #34495e; display: block; line-height: 1.4; }
-        
-        /* סרגל כלים תחתון */
         .survival-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 10px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 1000; border-top: 1px solid #eee; }
         .tool-btn { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #34495e; font-size: 0.65em; font-weight: bold; gap: 4px; }
         .tool-icon { font-size: 1.5em; }
@@ -26,64 +37,38 @@
 <body>
 
 <div class="header">
-    <h1 style="margin:0;">🗽 NYC PRO PLANNER</h1>
-    <p style="margin:5px 0 0; font-size:0.8em; color:#7f8c8d;">הכל מוכן! תהני בטיול ✈️</p>
+    <h1 style="margin:0;">🗽 NYC TRIP MASTER</h1>
+    <p style="margin:5px 0 0; font-size:0.8em; color:#7f8c8d;">המסלול המלא - 12 ימים של כיף</p>
 </div>
 
 <div id="app"></div>
 
 <div class="survival-bar">
-    <a href="https://www.google.com/maps/search/public+restrooms+near+me" target="_blank" class="tool-btn">
-        <span class="tool-icon">🚽</span><span>שירותים</span>
-    </a>
-    <a href="https://www.google.com/maps/search/pharmacy+24/7+near+me" target="_blank" class="tool-btn">
-        <span class="tool-icon">💊</span><span>פארם</span>
-    </a>
-    <a href="https://www.google.com/maps/search/shopping+mall+museum+near+me" target="_blank" class="tool-btn">
-        <span class="tool-icon">☔</span><span>גיבוי גשם</span>
-    </a>
-    <a href="https://www.google.com/maps/search/Marshalls+TJ+Maxx+near+me" target="_blank" class="tool-btn">
-        <span class="tool-icon">🛍️</span><span>עוד שופינג</span>
-    </a>
-    <a href="https://citymapper.com/nyc" target="_blank" class="tool-btn">
-        <span class="tool-icon">🚇</span><span>סאבוויי</span>
-    </a>
+    <a href="https://www.google.com/maps/search/${encodeURIComponent('public restroom')}" target="_blank" class="tool-btn"><span class="tool-icon">🚽</span><span>שירותים</span></a>
+    <a href="https://www.google.com/maps/search/${encodeURIComponent('pharmacy 24/7')}" target="_blank" class="tool-btn"><span class="tool-icon">💊</span><span>פארם</span></a>
+    <a href="https://www.google.com/maps/search/${encodeURIComponent('shopping mall')}" target="_blank" class="tool-btn"><span class="tool-icon">☔</span><span>גיבוי גשם</span></a>
+    <a href="https://www.google.com/maps/search/${encodeURIComponent('Marshalls')}" target="_blank" class="tool-btn"><span class="tool-icon">🛍️</span><span>עוד שופינג</span></a>
+    <a href="https://citymapper.com/nyc" target="_blank" class="tool-btn"><span class="tool-icon">🚇</span><span>סאבוויי</span></a>
 </div>
 
 <script>
     const data = [
-        { 
-            day: 1, date: "27-Sep", area: "Flatiron", 
-            sights: ["Madison Sq Park", "Times Square", "Grand Central"], 
-            piers: ["Pier 54 (Little Island)", "Pier 62"],
-            shopping: [{n:"Marshalls", a:"620 6th Ave"}, {n:"TJ Maxx", a:"620 6th Ave"}],
-            food: "Eataly", notes: "" 
-        },
-        { 
-            day: 3, date: "29-Sep", area: "Chelsea", 
-            sights: ["High Line", "EDGE", "Vessel"], 
-            piers: ["Pier 57 Rooftop", "Little Island"],
-            shopping: [{n:"Marshalls", a:"W 18th St"}, {n:"Le Labo", a:"Chelsea Market"}],
-            food: "Magnolia Bakery", notes: "" 
-        },
-        { 
-            day: 4, date: "30-Sep", area: "SoHo", 
-            sights: ["Little Italy", "Elizabeth St Garden"], 
-            piers: ["Pier 17", "Pier 35"],
-            shopping: [{n:"TJ Maxx", a:"483 Broadway"}, {n:"Nordstrom Rack", a:"60 E 14th St"}],
-            food: "Katz’s Deli", notes: "" 
-        },
-        { 
-            day: 10, date: "06-Oct", area: "Financial", 
-            sights: ["Wall St", "9/11 Memorial", "Oculus"], 
-            piers: ["Pier 15", "Pier 17"],
-            shopping: [{n:"Le Labo", a:"65D Wall St"}, {n:"TJ Maxx", a:"14 Wall St"}],
-            food: "Manhatta", notes: "" 
-        }
+        { day: 1, date: "27-Sep", area: "Flatiron + Midtown", sights: ["Madison Sq Park", "Flatiron Building", "Times Square", "Grand Central", "Bryant Park"], piers: ["Pier 54 (Little Island)", "Pier 62"], shopping: [{n:"Marshalls", a:"620 6th Ave"}, {n:"TJ Maxx", a:"620 6th Ave"}, {n:"Le Labo", a:"14 W 29th St"}], food: "Rosetta Bakery, Eataly", notes: "" },
+        { day: 2, date: "28-Sep", area: "Woodbury Outlets", sights: ["Woodbury Common Outlets"], piers: [], shopping: [{n:"Woodbury Outlets", a:"498 Red Apple Ct"}], food: "Food Court", notes: "" },
+        { day: 3, date: "29-Sep", area: "Chelsea + Hudson Yards", sights: ["Chelsea Market", "High Line", "EDGE", "Vessel"], piers: ["Pier 57 Rooftop", "Pier 55 (Little Island)"], shopping: [{n:"Marshalls", a:"W 18th St"}, {n:"Le Labo", a:"Chelsea Market"}], food: "Black Seed Bagels, Magnolia Bakery", notes: "" },
+        { day: 4, date: "30-Sep", area: "SoHo + Nolita", sights: ["Little Italy", "Chinatown", "Elizabeth St Garden"], piers: ["Pier 17", "Pier 15", "Pier 35"], shopping: [{n:"Nordstrom Rack", a:"60 E 14th St"}, {n:"TJ Maxx", a:"483 Broadway"}], food: "Katz’s Deli, Baya Bar", notes: "" },
+        { day: 5, date: "01-Oct", area: "Brooklyn: Crown Heights", sights: ["770 Eastern Pkwy", "Brooklyn Bridge Park", "Washington St"], piers: ["Pier 1 DUMBO", "Pier 6"], shopping: [{n:"DUMBO Shops", a:"Washington St Brooklyn"}], food: "Black Seed Bagels DUMBO", notes: "" },
+        { day: 6, date: "02-Oct", area: "Central Park + Uptown", sights: ["סנטרל פארק", "Roosevelt Island Cable Car"], piers: [], shopping: [{n:"Marshalls", a:"2182 Broadway"}, {n:"TJ Maxx", a:"250 W 57th St"}], food: "Broadway Bagels", notes: "" },
+        { day: 7, date: "03-Oct", area: "Brooklyn: Williamsburg", sights: ["Brooklyn Bridge (הליכה)", "Domino Park"], piers: ["Ferry Terminal Williamsburg"], shopping: [{n:"Williamsburg Shops", a:"Bedford Ave"}], food: "Smorgasburg", notes: "" },
+        { day: 8, date: "04-Oct", area: "Washington DC / Chill", sights: ["אופציה לוושינגטון", "בתי קפה ברוקלין"], piers: [], shopping: [], food: "Tompkins Sq Bagels", notes: "" },
+        { day: 9, date: "05-Oct", area: "Jersey Gardens", sights: ["Jersey Gardens Outlet"], piers: [], shopping: [{n:"Jersey Gardens", a:"651 Kapkowski Rd"}], food: "Mall Food", notes: "" },
+        { day: 10, date: "06-Oct", area: "Downtown / Financial", sights: ["Wall St", "9/11 Memorial", "Oculus", "One World"], piers: ["Pier 15", "Pier 17"], shopping: [{n:"Le Labo", a:"65D Wall St"}, {n:"TJ Maxx", a:"14 Wall St"}], food: "Manhatta, Overstory", notes: "" },
+        { day: 11, date: "07-Oct", area: "Union Sq + Village", sights: ["Union Sq Park", "Washington Sq Park", "Friends Building"], piers: ["Pier 46", "Pier 51"], shopping: [{n:"Marshalls", a:"620 6th Ave"}], food: "Bagel Pub, Fellini Cafe", notes: "" },
+        { day: 12, date: "08-Oct", area: "Midtown - טיסה", sights: ["Bryant Park", "Public Library"], piers: ["Pier 54"], shopping: [{n:"Macy’s", a:"151 W 34th St"}], food: "Ess-a-Bagel", notes: "" }
     ];
 
     function getMapUrl(query) {
-        return `https://www.google.com/maps/search/${encodeURIComponent(query + " New York")}`;
+        return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query + " New York")}`;
     }
 
     function render() {
@@ -93,23 +78,19 @@
             card.className = 'day-card';
             
             const sightsHtml = day.sights.map(s => `<a class="nav-link" href="${getMapUrl(s)}">${s}</a>`).join(', ');
-            const pierHtml = day.piers.map(p => `<a class="nav-link" style="color:#16a085" href="${getMapUrl(p)}">${p}</a>`).join(', ');
-            const shopHtml = day.shopping.map(s => `<a class="nav-link" href="${getMapUrl(s.a)}">${s.n}</a>`).join(', ');
+            const pierHtml = day.piers.length > 0 ? day.piers.map(p => `<a class="nav-link" style="color:#16a085" href="${getMapUrl(p)}">${p}</a>`).join(', ') : "אין מזחים במסלול היום";
+            const shopHtml = day.shopping.length > 0 ? day.shopping.map(s => `<a class="nav-link" href="${getMapUrl(s.a)}">${s.n}</a>`).join(', ') : "יום מנוחה מקניות";
 
             card.innerHTML = `
-                <div class="day-header">
-                    <span class="day-title">${day.date} | ${day.area}</span>
-                </div>
-                <div class="category"><span class="label">🏢 אתרים:</span><span class="content">${sightsHtml}</span></div>
-                <div class="category"><span class="label">⚓ מזחים:</span><span class="content">${pierHtml}</span></div>
-                <div class="category"><span class="label">🛍️ קניות:</span><span class="content">${shopHtml}</span></div>
+                <div class="day-header"><span class="day-title">${day.date} | יום ${day.day}</span></div>
+                <div class="category"><span class="label">🏢 אזור ואתרים:</span><span class="content">${sightsHtml}</span></div>
+                <div class="category"><span class="label">⚓ מזחים ורצועת חוף:</span><span class="content">${pierHtml}</span></div>
+                <div class="category"><span class="label">🛍️ קניות (לפי כתובת):</span><span class="content">${shopHtml}</span></div>
                 <div class="category"><span class="label">🍴 אוכל:</span><span class="content"><a class="nav-link" href="${getMapUrl(day.food)}">${day.food}</a></span></div>
-                
                 <a class="near-btn" href="${getMapUrl('interesting places near ' + day.area)}" target="_blank">🔍 מה נמצא בסביבת ${day.area}?</a>
-
                 <div class="category" style="background:#fdfae6; padding:10px; border-radius:10px; margin-top:10px;">
-                    <span class="label">📎 הערות וכרטיסים:</span>
-                    <div class="content" contenteditable="true" style="font-size:0.9em;">${day.notes || 'הדביקי פה...'}</div>
+                    <span class="label">📎 הערות ולינקים לכרטיסים:</span>
+                    <div class="content" contenteditable="true" style="font-size:0.9em;">${day.notes || 'לחצי להוספת הערה...'}</div>
                 </div>
             `;
             app.appendChild(card);
